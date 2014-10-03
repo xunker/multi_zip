@@ -5,8 +5,6 @@ RSpec.describe MultiZip::File do
   let(:filename) { 'spec/fixtures/mymedia_lite-20130621.epub' }
   let(:subject) { MultiZip::File.new(filename) }
 
-  before { puts 'remove'; remove_constants }
-
   describe '.open' do
     it 'calls .new with same args' do
       options = { :foo => :bar }
@@ -19,10 +17,10 @@ RSpec.describe MultiZip::File do
     [ %w[rubyzip zip], %w[zipruby zipruby] ].each do |backend_name, require_name|
       context "backend: #{backend_name}" do
         before do
-          puts "require \"#{require_name}\""
-          puts require require_name
+          apply_constants(backend_name)
           subject.backend = backend_name
         end
+        after { stash_constants(backend_name) }
         it 'returns the file as a string' do
           expect(
             subject.read_file('OEBPS/text/book_0002.xhtml').bytesize
@@ -56,9 +54,10 @@ RSpec.describe MultiZip::File do
       [ %w[ zipruby zipruby ], %w[ rubyzip zip ] ].each do |gem_name, require_name|
         context "#{gem_name} gem has been required" do
           before do
-            puts "require \"#{require_name}\""
-            puts require(require_name)
+            apply_constants(gem_name)
           end
+
+          after { stash_constants(gem_name) }
 
           it "is :#{gem_name}" do
             expect(subject.backend).to eq(gem_name.to_sym)
