@@ -1,5 +1,7 @@
 module MultiZip
   class File
+    attr_reader :filename
+
     BACKEND_PREFERENCE = [ :rubyzip, :zipruby ]
     BACKENDS = {
       :rubyzip => {
@@ -20,8 +22,11 @@ module MultiZip
 
     def initialize(filename, options = {})
       @filename = filename
-      if b_end = options.delete(:backend)
-        backend = b_end
+
+      backend = if b_end = options.delete(:backend)
+        b_end
+      else
+        default_backend
       end
 
       if block_given?
@@ -52,7 +57,31 @@ module MultiZip
       end
     end
 
-    def read_file(file_path, options={})
+    # This method MUST be overridden by a backend module.
+    def read_member(member_path, options={})
+      raise NotImplementedError
+    end
+
+    # This method MAY be overridden by backend module for the sake of
+    # efficiency, or will call #read_member for each entry in member_paths.
+    def read_members(member_paths, options={})
+      member_paths.map{|f| read_member(f, options) }
+    end
+
+    # List members of the zip file. Optionally can specify a prefix.
+    def list_members(prefix = nil, options={})
+      raise NotImplementedError
+    end
+
+    # Boolean, does a given member path exist in the zip file?
+    # This method MAY be overridden by backend module for the sake of
+    # efficiency, or will use results of #list_members.
+    def member_exists?(member_path, options={})
+      list_members(nil, options).include?(member_path)
+    end
+
+    # Write string contents to a zip member file
+    def write_member(member_path, member_content)
       raise NotImplementedError
     end
 

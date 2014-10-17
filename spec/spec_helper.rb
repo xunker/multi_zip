@@ -21,6 +21,10 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 end
 
+def fixture_zip_file
+  'spec/fixtures/mymedia_lite-20130621.epub'
+end
+
 def stash_constants(lib)
   ZIP_CONSTANTS[lib.to_sym].each do |cc|
     Object.const_set("Stash#{lib}Zip#{cc}".to_sym, Zip.const_get(cc))
