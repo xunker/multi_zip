@@ -229,6 +229,10 @@ RSpec.describe MultiZip::File do
 
   describe '#add_members'
 
+  describe '#remove_member'
+
+  describe '#remove_members'
+
   describe '#backend=' do
     context 'supported backends' do
       before do
