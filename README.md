@@ -1,25 +1,14 @@
 # MultiZip
 
-TODO: Write a gem description
+Provides swappable zipping/unzipping backends utilizing zip/rubyzip, archive, archive-zip, minizip and zipruby.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Do the standard dance: Either add it to your `Gemfile` and `bundle install`
+or `gem install multi_zip`.
 
-```ruby
-gem 'multi_zip'
-```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install multi_zip
-
-** Important: ** You will also need a zip backend gem installed and
-`require`ed. See `Supported Backends` for a list ones that can be used.
+__IMPORTANT_NEXT STEP:__ You will also need a zip backend gem installed and
+required. See `Supported Backends` for of which ones can be used.
 
 ## Usage
 
