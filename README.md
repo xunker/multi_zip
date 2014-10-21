@@ -7,7 +7,7 @@ Provides swappable zipping/unzipping backends utilizing zip/rubyzip, archive, ar
 Do the standard dance: Either add it to your `Gemfile` and `bundle install`
 or `gem install multi_zip`.
 
-__IMPORTANT_NEXT STEP:__ You will also need a zip backend gem installed and
+__IMPORTANT NEXT STEP:__ You will also need a zip backend gem installed and
 required. See `Supported Backends` for of which ones can be used.
 
 ## Usage
@@ -21,7 +21,7 @@ required. See `Supported Backends` for of which ones can be used.
   * minizip
 
 If no usable backends are loaded a `MultiZip::NoSupportedBackendError` will be
-raise for any operation.
+raised for any operation.
 
 For all the examples below, assume this:
 ```ruby
