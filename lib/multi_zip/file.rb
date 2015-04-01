@@ -58,15 +58,26 @@ module MultiZip
       end
     end
 
+    # Intended to return the contents of a zip member as a string.
+    #
     # This method MUST be overridden by a backend module.
     def read_member(member_path, options={})
       raise NotImplementedError
     end
 
+    # Intended to return the contents of zip members as array of strings.
+    #
     # This method MAY be overridden by backend module for the sake of
     # efficiency, or will call #read_member for each entry in member_paths.
     def read_members(member_paths, options={})
       member_paths.map{|f| read_member(f, options) }
+    end
+
+    # Intended to write the contents of a zip member to a filesystem path.
+    #
+    # This method MUST be overridden by a backend module.
+    def extract_member(member_path, destination_path, options={})
+      raise NotImplementedError
     end
 
     # List members of the zip file. Optionally can specify a prefix.

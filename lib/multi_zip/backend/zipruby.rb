@@ -27,4 +27,19 @@ module MultiZip::Backend::Zipruby
     end
     true
   end
+
+  def extract_member(member_path, destination_path, options = {})
+    Zip::Archive.open(@filename) do |ar|
+      output_file = File.new(destination_path, 'wb')
+
+      ar.fopen(member_path) do |member|
+        while chunk = member.read(BUFFER_SIZE)
+          output_file.print chunk
+        end
+      end
+
+      output_file.close
+    end
+    destination_path
+  end
 end

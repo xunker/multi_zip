@@ -55,6 +55,13 @@ files = zip.read_member('/path/inside/archive/to/file_1.txt', '/path/inside/arch
 # => ["File one content.", "File two content."]
 ```
 
+#### Extract file from zip archive to filesystem path
+
+```ruby
+file = zip.extract_member('/path/inside/archive/to/file.txt', 'path/on/local/filesystem/file.txt')
+# => 'path/on/local/filesystem/file.txt'
+```
+
 #### Write file to zip archive from string
 
 ```ruby

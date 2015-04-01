@@ -34,6 +34,21 @@ shared_examples 'zip backend' do |backend_name, require_name|
     end
   end
 
+  describe '#extract_member' do
+    context "backend: #{backend_name}" do
+      let(:tempfile) { Tempfile.new('multi_zip_test') }
+      let!(:extraction_return) { subject.extract_member('OEBPS/text/book_0002.xhtml', tempfile.path) }
+      after { tempfile.delete }
+      it 'writes the file to the local filesystem' do
+        expect(tempfile.size).to eq(13_103)
+      end
+
+      it 'returns the file system path written to' do
+        expect(extraction_return).to eq(tempfile.path)
+      end
+    end
+  end
+
   describe '#list_members' do
     context "backend: #{backend_name}" do
       it 'returns array member file names' do

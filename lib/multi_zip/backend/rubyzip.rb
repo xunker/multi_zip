@@ -1,7 +1,8 @@
 module MultiZip::Backend::Rubyzip
-  def read_member(member_filename, options = {})
+  BUFFER_SIZE = 8192
+  def read_member(member_path, options = {})
     Zip::File.open(@filename) do |zip_file|
-      zip_file.glob(member_filename).first.get_input_stream.read
+      zip_file.glob(member_path).first.get_input_stream.read
     end
   end
 
@@ -19,5 +20,20 @@ module MultiZip::Backend::Rubyzip
         os.write member_contents
       end
     end
+  end
+
+  def extract_member(member_path, destination_path, options = {})
+    Zip::File.open(@filename) do |zip_file|
+      output_file = File.new(destination_path, 'wb')
+
+      stream = zip_file.glob(member_path).first.get_input_stream
+
+      while chunk = stream.read(BUFFER_SIZE)
+        output_file.print chunk
+      end
+
+      output_file.close
+    end
+    destination_path
   end
 end
