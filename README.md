@@ -1,6 +1,22 @@
 # MultiZip
 
-Provides swappable zipping/unzipping backends utilizing zip/rubyzip, archive, archive-zip, minizip and zipruby.
+Provides a standard, generic interface for zipping/unzipping files using
+whatever gems are present on the system.
+
+This lets you to avoid namespace collisions or implementation restrictions
+in order to make your code more portable.
+
+MultiZip provides a very small, very focused set up functions:
+
+ * Create new archives.
+ * Add members to a archive from variable content or the file-system.
+ * Read members from a archive in to a variable.
+ * Extract members from an archive to the file-system.
+ * Delete members from an archive.
+ * List members inside an archive and get information for a single member.
+
+It is meant to to do the most common zip/unzip tasks. For anything more
+complicated, using a specific (un)zipping library is recommended.
 
 ## Installation
 
@@ -15,10 +31,7 @@ required. See `Supported Backends` for of which ones can be used.
 `multi_zip` will try to use the available backends in the following order:
 
   * rubyzip
-  * archive
-  * archive-zip
   * zipruby
-  * minizip
 
 If no usable backends are loaded a `MultiZip::NoSupportedBackendError` will be
 raised for any operation.
@@ -92,13 +105,44 @@ zip.remove_members(
 # => true
 ```
 
+#### list files in a zip archive
+
+Response array of file names within the archive.
+
+```ruby
+zip.list_members
+# => [
+  '/path/inside/archive/to/file_1.txt',
+  '/path/inside/archive/to/file_2.txt'
+]
+```
+
+#### Other
+
+`.open` can also receive a block:
+
+```ruby
+MultiZip::File.open('/path/to/archive.zip') do |archive|
+  # commands
+end
+```
+
 ## Supported backends
 
+### Current
+
   * rubyzip
+  * zipruby
+
+### Pending
+
   * archive
   * archive-zip
-  * zipruby
   * minizip
+
+## TODO
+
+  * Standardize Exception classes and when to raise them
 
 ## Contributing
 
