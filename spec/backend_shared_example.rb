@@ -1,10 +1,10 @@
 shared_examples 'zip backend' do |backend_name, require_name|
   let(:filename) { fixture_zip_file }
-  let(:subject) { MultiZip::File.new(filename) }
+  let(:subject) { MultiZip::File.new(filename, backend: backend_name) }
 
   before do
     apply_constants(backend_name)
-    subject.backend = backend_name
+    # subject.backend = backend_name
   end
   after { stash_constants(backend_name) }
 

@@ -23,7 +23,7 @@ module MultiZip
     def initialize(filename, options = {})
       @filename = filename
 
-      backend = if b_end = options.delete(:backend)
+      self.backend = if b_end = options.delete(:backend)
         b_end
       else
         default_backend
@@ -47,6 +47,7 @@ module MultiZip
     end
 
     def backend=(backend_name)
+      return if backend_name.nil?
       if BACKENDS.keys.include?(backend_name.to_sym)
         @backend = backend_name.to_sym
         require "multi_zip/backend/#{@backend}"
