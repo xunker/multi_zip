@@ -157,7 +157,7 @@ end
 
   * [archive](https://rubygems.org/gems/archive)
   * [unix_utils](https://rubygems.org/gems/unix_utils)
-  * Others (please suggest them in [new issue](https://github.com/xunker/multi_zip/issues/new)
+  * Others (please suggest them in [new issue](https://github.com/xunker/multi_zip/issues/new))
   
 ## TODO
 
@@ -187,6 +187,7 @@ Things that need to be done, in no particular order:
 
 1. Fork it ( https://github.com/xunker/multi_zip/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+3. Ensure existing tests pass and add tests to cover any new functionality
+4. Commit your changes (`git commit -am 'Add some feature'`)
+5. Push to the branch (`git push origin my-new-feature`)
+6. Create a new Pull Request
