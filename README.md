@@ -1,11 +1,11 @@
 [![Build Status](https://travis-ci.org/xunker/multi_zip.png?branch=master)](https://travis-ci.org/xunker/multi_zip)
 # MultiZip
 
-Provides a standard interface for zipping/unzipping files using whatever gems
-are present on the system. It will detect what gems are available and
-automatically use them without requiring you to write specific code for each.
-This allows for code that is more portable and helps to avoid namespace
-collisions and other implementation restrictions.
+MultiZip is a gem that abstracts other zipping/unzipping gems. It
+automatically detects what gems are available and provides a consistent
+interface regardless of which is being used. This allows for code that is more
+portable and helps to avoid namespace collisions and other implementation
+restrictions.
 
 MultiZip provides a very small and focused set of functions:
 
@@ -59,7 +59,7 @@ zip = MultiZip::File.new(filename)
 zip.backend = :rubyzip
 ```
 
-You can see what backends are available:
+You can see what backends are supported:
 
 ```ruby
 > MultiZip::File.supported_backends
