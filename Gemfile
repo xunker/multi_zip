@@ -2,8 +2,10 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'pry', :require => false
-gem 'pry-byebug', :require => false
+if RUBY_VERSION.to_f >= 2.0
+  gem 'pry', :require => false
+  gem 'pry-byebug', :require => false
+end
 
 gem 'rubyzip', '~> 1.1.6', :require => nil, :platforms => :ruby
 gem 'zip-zip', '~>0.3', :require => nil, :platforms => :ruby

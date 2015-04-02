@@ -10,7 +10,8 @@ restrictions.
 MultiZip provides a very small and focused set of functions:
 
  * Create a new zip archive or open existing one.
- * Add files to a archive from using content from a variable or a local file.
+ * Add files to a archive from using content from a variable.
+ * Add a local file to an archive. (Pending TODO).
  * Read files from a archive in to a variable.
  * Extract files from an archive to a local file.
  * List files contained in an archive.
@@ -98,14 +99,20 @@ file = zip.read_member('/path/inside/archive/to/file.txt')
 #### Read multiple files from zip archive
 
 ```ruby
-files = zip.read_member('/path/inside/archive/to/file_1.txt', '/path/inside/archive/to/file_2.txt')
+files = zip.read_member(
+  '/path/inside/archive/to/file_1.txt',
+  '/path/inside/archive/to/file_2.txt'
+)
 # => ["File one content.", "File two content."]
 ```
 
 #### Extract file from zip archive to filesystem path
 
 ```ruby
-file = zip.extract_member('/path/inside/archive/to/file.txt', 'path/on/local/filesystem/file.txt')
+file = zip.extract_member(
+  '/path/inside/archive/to/file.txt',
+  'path/on/local/filesystem/file.txt'
+)
 # => 'path/on/local/filesystem/file.txt'
 ```
 
@@ -113,49 +120,6 @@ file = zip.extract_member('/path/inside/archive/to/file.txt', 'path/on/local/fil
 
 ```ruby
 zip.write_member('/path/inside/archive/to/file.txt', 'File one content.')
-# => true
-```
-
-#### Write multiple files to zip archive from strings
-
-```ruby
-zip.write_member(
-  ['/path/inside/archive/to/file_1.txt', 'File one content.'],
-  ['/path/inside/archive/to/file_2.txt', 'File two content.']
-)
-# => true
-```
-
-#### Add a file from filesystem to the zip archive
-
-```ruby
-zip.add_member('/path/inside/archive/to/file.txt', '/path/to/file.txt')
-# => true
-```
-
-#### Add many files from the filesystem to the zip archive
-
-```ruby
-zip.add_members(
-  ['/path/inside/archive/to/file_1.txt', '/path/to/file_1.txt'],
-  ['/path/inside/archive/to/file_2.txt', '/path/to/file_2.txt']
-)
-# => true
-```
-
-#### Remove a file from the zip archive
-
-```ruby
-zip.remove_members('/path/inside/archive/to/file.txt')
-# => true
-```
-
-#### Remove many files from the zip archive
-
-```ruby
-zip.remove_members(
-  ['/path/inside/archive/to/file_1.txt', '/path/inside/archive/to/file_2.txt']
-)
 # => true
 ```
 
@@ -185,14 +149,16 @@ end
 
 ### Current
 
-  * rubyzip
-  * zipruby
+  * [rubyzip](https://rubygems.org/gems/rubyzip)
+  * [archive-zip](https://rubygems.org/gems/archive-zip)
+  * [zipruby](https://rubygems.org/gems/zipruby)
 
-### Pending
+### Planned
 
-  * archive
-  * archive-zip
-
+  * [archive](https://rubygems.org/gems/archive)
+  * [unix_utils](https://rubygems.org/gems/unix_utils)
+  * Others (please suggest them in [new issue](https://github.com/xunker/multi_zip/issues/new)
+  
 ## TODO
 
 Things that need to be done, in no particular order:

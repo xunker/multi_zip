@@ -1,7 +1,9 @@
 require 'multi_zip'
 
-require 'pry'
-require 'pry-byebug'
+if RUBY_VERSION.to_f >= 2.0
+  require 'pry'
+  require 'pry-byebug'
+end
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
