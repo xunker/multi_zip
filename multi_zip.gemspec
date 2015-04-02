@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = MultiZip::VERSION
   spec.authors       = ["Matthew Nielsen"]
   spec.email         = ["xunker@pyxidis.org"]
-  spec.summary       = %q{Provides swappable zipping/unzipping backends.}
-  spec.description   = %q{Provides swappable zipping/unzipping backends utilizing zip/rubyzip, archive, archive-zip, minizip and zipruby.}
+  spec.summary       = %q{Abstracts zipping and unzipping using whatever gems are installed, automatically.}
+  spec.description   = %q{Abstracts zipping and unzipping using whatever gems are installed using one consistent API. Provides swappable zipping/unzipping backends so you're not tied to just one gem. Support rubyzip, archive-zip, zipruby and others.}
   spec.homepage      = "https://github.com/xunker/multi_zip"
   spec.license       = "MIT"
 
