@@ -29,12 +29,25 @@ end
 
 def test_with_rubyzip?
   # rubyzip requires ruby >= 1.9.2
-  Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("1.9.2")
+  if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("1.9.2")
+    gem 'rubyzip'
+    return true
+  end
+  retrun false
+rescue Gem::LoadError
+  false  
+end
+
+def test_with_zipruby?
+  gem 'zipruby'
+  true
+rescue Gem::LoadError
+  false
 end
 
 def backends_to_test
   @backends_to_test ||= [
-    :zipruby,
+    (test_with_zipruby? ? :zipruby : nil),
     (test_with_rubyzip? ? :rubyzip : nil),
     :archive_zip
   ].compact
@@ -78,9 +91,11 @@ if test_with_rubyzip?
   stash_constants(:rubyzip)
 end
 
-require 'zipruby'
-set_backend_class(:zipruby, Zip)
-stash_constants(:zipruby)
+if test_with_zipruby?
+  require 'zipruby'
+  set_backend_class(:zipruby, Zip)
+  stash_constants(:zipruby)
+end
 
 require 'archive/zip'
 # using `Archive` instead of `Archive::Zip`, because we need to stash the

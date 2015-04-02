@@ -14,4 +14,4 @@ if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("1.9.2")
 end
 
 gem 'zipruby', '0.3.6', :require => nil, :platforms => :ruby
-gem 'archive-zip', '~> 0.7.0', :require => nil, :platforms => :ruby
+gem 'archive-zip', '~> 0.7.0', :require => nil
