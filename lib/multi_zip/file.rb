@@ -64,6 +64,20 @@ module MultiZip
       end
     end
 
+    def self.supported_backends
+      BACKENDS.keys
+    end
+
+    def self.available_backends
+      available = []
+      BACKENDS.each do |name, opts|
+        if opts[:fingerprints].all?{|expectation, lmb| lmb.call == expectation }
+          available << name
+        end
+      end
+      available
+    end
+
     # Intended to return the contents of a zip member as a string.
     #
     # This method MUST be overridden by a backend module.
@@ -114,7 +128,6 @@ module MultiZip
       output_file.close
       destination_path
     end
-
 
     def default_backend
       BACKEND_PREFERENCE.each do |name|

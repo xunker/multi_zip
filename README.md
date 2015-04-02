@@ -9,45 +9,78 @@ in order to make your code more portable.
 MultiZip provides a very small, very focused set up functions:
 
  * Create new archives.
- * Add members to a archive from variable content or the file-system.
+ * Add members to a archive from string or a local file.
  * Read members from a archive in to a variable.
- * Extract members from an archive to the file-system.
- * Delete members from an archive.
- * List members inside an archive and get information for a single member.
+ * Extract members from an archive to a file.
+ * List members inside an archive.
+ # Get information for a single member. (Pending TODO)
+ * Delete members from an archive. (Pending TODO)
 
 It is meant to to do the most common zip/unzip tasks. For anything more
-complicated, using a specific (un)zipping library is recommended.
+complicated than these basics you should use a specific a specific (un)zipping
+library instead.
 
 ## Installation
 
-Do the standard dance: Either add it to your `Gemfile` and `bundle install`
-or `gem install multi_zip`.
+Do the standard dance: Either add `gem 'multi_zip` to your Gemfile or run
+`gem install multi_zip`.
 
 __IMPORTANT NEXT STEP:__ You will also need a zip backend gem installed and
 required. See `Supported Backends` for of which ones can be used.
 
-## Usage
+## Getting started
 
-`multi_zip` will try to use the available backends in the following order:
+`multi_zip` will try to use the available gem backends in the following order:
 
   * rubyzip
+  * archive/zip
   * zipruby
 
 If no usable backends are loaded a `MultiZip::NoSupportedBackendError` will be
 raised for any operation.
 
+If you have multiple gems available and want to choose your backend, you can
+do that in the initializer:
+
+```ruby
+zip = MultiZip::File.new(filename, backend: :rubyzip) }
+```
+
+..or by calling `#backend=` on a MultiZip::File instance:
+
+```ruby
+zip = MultiZip::File.new(filename)
+zip.backend = :rubyzip
+```
+
+You can see what backends are available:
+
+```ruby
+> MultiZip::File.supported_backends
+ => [:rubyzip, :archive_zip, :zipruby]
+```
+
+You can also check which of these supported backends is currently available:
+
+```ruby
+> MultiZip::File.available_backends
+ => [] 
+> require 'archive/zip'
+ => true 
+> MultiZip::File.available_backends
+ => [:archive_zip] 
+> require 'zip'
+ => true 
+> MultiZip::File.available_backends
+ => [:rubyzip, :archive_zip]
+```
+
+### Examples
+
 For all the examples below, assume this:
 ```ruby
 zip = MultiZip::File.open('/path/to/archive.zip')
 ```
-
-### Terminology
-
-Standard terms used in this gem:
-
-  * **archive** or **zip archive**: the zip file itself.
-  * **member**: a file contained within the zip archive.
-  * **read_**: return member content as a string.
 
 #### Read file from zip archive
 
@@ -159,6 +192,7 @@ end
 Things that need to be done, in no particular order:
 
   * Add support for more backends.
+  * #write_member: support IO streams.
   * test with different majour versions of current supported backends.
   * Standardize Exception classes and when to raise them.
   * #read_*, #extract_* and #write_* methods should accept a block.
