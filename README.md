@@ -22,6 +22,11 @@ It is meant to to do the most common zip/unzip tasks. For anything more
 complicated than these basics you should use a specific (un)zipping library
 instead.
 
+Rubies supported (see [CI status](https://travis-ci.org/xunker/multi_zip) for more detail):
+  * MRI 2.x.x, 1.9.3, 1.8.7 and REE
+  * Jruby
+  * Rubinius 2
+
 This work was inspired by [multi_json](https://github.com/intridea/multi_json)
 and [multi_xml](https://github.com/sferik/multi_xml). The first version was
 written while I was visiting Japan in 2014 and is dedicated to all the
