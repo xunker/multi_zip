@@ -33,13 +33,18 @@ def test_with_rubyzip?
 end
 
 def backends_to_test
-  [
+  @backends_to_test ||= [
     :zipruby,
     (test_with_rubyzip? ? :rubyzip : nil),
     :archive_zip
   ].compact
 end
 
+warn "*** Backends to test under Ruby version #{RUBY_VERSION}: #{backends_to_test.map(&:to_s).join(', ')} ***"
+excluded_backends = MultiZip::File::BACKENDS.keys - backends_to_test
+if excluded_backends.length > 0
+  warn "*** Backends that will not be tested: #{excluded_backends.map(&:to_s).join(', ')} ***"
+end
 
 BACKEND_CONSTANTS = {}
 BACKEND_CLASSES = {}
