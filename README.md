@@ -169,6 +169,7 @@ end
 Things that need to be done, in no particular order:
 
   * Add support for more backends.
+  * Option to set overwrite existing archive instead of adding to it.
   * #write_member: support IO streams.
   * test with different majour versions of current supported backends.
   * Standardize Exception classes and when to raise them.
