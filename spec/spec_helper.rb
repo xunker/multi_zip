@@ -1,7 +1,13 @@
 require 'multi_zip'
 
-require 'pry'
-require 'pry-byebug'
+# use this begin block to avoid circular reloading of pry.
+begin
+  gem 'pry'
+  gem 'pry-byebug'
+rescue Gem::LoadError
+  require 'pry'
+  require 'pry-byebug'
+end
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
@@ -25,26 +31,42 @@ def fixture_zip_file
   'spec/fixtures/mymedia_lite-20130621.epub'
 end
 
+BACKEND_CONSTANTS = {}
+BACKEND_CLASSES = {}
+
+def set_backend_class(lib, klass)
+  BACKEND_CONSTANTS[lib.to_sym] = klass.constants
+  BACKEND_CLASSES[lib.to_sym] = klass
+end
+
+def backend_class(lib)
+  BACKEND_CLASSES[lib.to_sym]
+end
+
 def stash_constants(lib)
-  ZIP_CONSTANTS[lib.to_sym].each do |cc|
-    Object.const_set("Stash#{lib}Zip#{cc}".to_sym, Zip.const_get(cc))
-    Zip.send(:remove_const, cc)
+  BACKEND_CONSTANTS[lib.to_sym].each do |cc|
+    Object.const_set("Stash#{lib}Zip#{cc}".to_sym, backend_class(lib).const_get(cc))
+    backend_class(lib).send(:remove_const, cc)
   end
 end
 
 def apply_constants(lib)
-  ZIP_CONSTANTS[lib.to_sym].each do |cc|
-    Zip.const_set(cc, Object.const_get("Stash#{lib}Zip#{cc}".to_sym))
+  BACKEND_CONSTANTS[lib.to_sym].each do |cc|
+    backend_class(lib).const_set(cc, Object.const_get("Stash#{lib}Zip#{cc}".to_sym))
     Object.send(:remove_const, "Stash#{lib}Zip#{cc}".to_sym)
   end
 end
 
-ZIP_CONSTANTS = {}
-
 require 'zip'
-ZIP_CONSTANTS[:rubyzip] = Zip.constants
+set_backend_class(:rubyzip, Zip)
 stash_constants(:rubyzip)
 
 require 'zipruby'
-ZIP_CONSTANTS[:zipruby] = Zip.constants
+set_backend_class(:zipruby, Zip)
 stash_constants(:zipruby)
+
+require 'archive/zip'
+# using `Archive` instead of `Archive::Zip`, because we need to stash the
+# `::Zip` constant since we use that as the archive/zip fingerprint.
+set_backend_class(:archive_zip, Archive)
+stash_constants(:archive_zip)

@@ -2,7 +2,7 @@ module MultiZip
   class File
     attr_reader :filename
 
-    BACKEND_PREFERENCE = [ :rubyzip, :zipruby ]
+    BACKEND_PREFERENCE = [ :rubyzip, :archive_zip, :zipruby ]
     BACKENDS = {
       :rubyzip => {
         :fingerprints => [
@@ -10,6 +10,12 @@ module MultiZip
           [nil, lambda { defined?(Zip::Archive) }]
         ],
         :constant => lambda { MultiZip::Backend::Rubyzip }
+      },
+      :archive_zip => {
+        :fingerprints => [
+          ['constant', lambda { defined?(Archive::Zip) } ]
+        ],
+        :constant => lambda { MultiZip::Backend::ArchiveZip }
       },
       :zipruby => {
         :fingerprints => [

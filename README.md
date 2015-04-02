@@ -41,6 +41,14 @@ For all the examples below, assume this:
 zip = MultiZip::File.open('/path/to/archive.zip')
 ```
 
+### Terminology
+
+Standard terms used in this gem:
+
+  * **archive** or **zip archive**: the zip file itself.
+  * **member**: a file contained within the zip archive.
+  * **read_**: return member content as a string.
+
 #### Read file from zip archive
 
 ```ruby
@@ -145,11 +153,24 @@ end
 
   * archive
   * archive-zip
-  * minizip
 
 ## TODO
 
-  * Standardize Exception classes and when to raise them
+Things that need to be done, in no particular order:
+
+  * Add support for more backends.
+  * test with different majour versions of current supported backends.
+  * Standardize Exception classes and when to raise them.
+  * #extract_members: extract multiple files with one command (new method).
+  * #extract_member: extract file to path using original member name.
+  * #write_member: add entire directory (recursively or not) to archive.
+  * #write_members: add multiple files by wildcard.
+  * #read_members: read multiple files wildcard.
+  * #read_members: read multiple files via prefix (as #list_members does).
+  * #extract_members: extract multiple files via prefix (as #list_members does).
+  * #extract_members: extract multiple files wildcard.
+  * #member_info: return information (name, size, etc) about member (new method).
+  * #read_member_stream: return member as IO Stream to keeping large amounts of data in memory. Accepts block. (new method)
 
 ## Contributing
 

@@ -19,7 +19,7 @@ RSpec.describe MultiZip::File do
         expect_any_instance_of(MultiZip::File).to receive(:default_backend)
       end
 
-      %w[ rubyzip zipruby ].each do |backend_name|
+      %w[ rubyzip zipruby archive_zip ].each do |backend_name|
         it "sets backend to #{backend_name}" do
           subject.backend = backend_name
           expect(subject.backend).to eq(backend_name.to_sym)
@@ -38,7 +38,7 @@ RSpec.describe MultiZip::File do
 
   describe "#backend" do
     context "no backend specified" do
-      [ %w[ zipruby zipruby ], %w[ rubyzip zip ] ].each do |gem_name, require_name|
+      %w[ zipruby rubyzip archive_zip ].each do |gem_name|
         context "#{gem_name} gem has been required" do
           before do
             apply_constants(gem_name)
