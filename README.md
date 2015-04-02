@@ -1,11 +1,11 @@
 [![Build Status](https://travis-ci.org/xunker/multi_zip.png?branch=master)](https://travis-ci.org/xunker/multi_zip)
 # MultiZip
 
-MultiZip is a gem that abstracts other zipping/unzipping gems. It
+MultiZip is a Ruby Gem that abstracts other zipping/unzipping gems. It
 automatically detects what gems are available and provides a consistent
 interface regardless of which is being used. This allows for code that is more
-portable and helps to avoid namespace collisions and other implementation
-restrictions.
+portable and helps to avoid namespace collisions (zipruby vs. rubyzip for example)
+and other implementation restrictions (MRI vs. Jruby, Unix vs. Windows, etc,).
 
 MultiZip provides a very small and focused set of functions:
 
@@ -18,8 +18,8 @@ MultiZip provides a very small and focused set of functions:
  * Get information for a file in an archive. (Pending TODO)
  * Delete files from an archive. (Pending TODO)
 
-It is meant to to do the most common zip/unzip tasks. For anything more
-complicated than these basics you should use a specific (un)zipping library
+It is meant for most common zip/unzip tasks. For anything more
+complicated than these basics, you should use a specific (un)zipping library
 instead.
 
 Rubies supported (see [CI status](https://travis-ci.org/xunker/multi_zip) for more detail):
@@ -128,16 +128,16 @@ zip.write_member('/path/inside/archive/to/file.txt', 'File one content.')
 # => true
 ```
 
-#### list files in a zip archive
+#### List files in a zip archive
 
 Response array of file names within the archive.
 
 ```ruby
 zip.list_members
 # => [
-  '/path/inside/archive/to/file_1.txt',
-  '/path/inside/archive/to/file_2.txt'
-]
+#  '/path/inside/archive/to/file_1.txt',
+#  '/path/inside/archive/to/file_2.txt'
+# ]
 ```
 
 #### Other
