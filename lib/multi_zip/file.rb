@@ -81,9 +81,12 @@ module MultiZip
 
     # Intended to write the contents of a zip member to a filesystem path.
     #
-    # This method MUST be overridden by a backend module.
+    # This SHOULD be overridden by a backend module because this default
+    # will try to read the whole file in to memory before outputting to disk
+    # and that can be memory-intensive if the file is large.
     def extract_member(member_path, destination_path, options={})
-      raise NotImplementedError
+      warn "Using default #extract_member which may be memory-inefficient"
+      default_extract_member(member_path, destination_path, options)
     end
 
     # List members of the zip file. Optionally can specify a prefix.
@@ -104,6 +107,14 @@ module MultiZip
     end
 
   private
+
+    def default_extract_member(member_path, destination_path, options={})
+      output_file = ::File.new(destination_path, 'wb')
+      output_file.write(read_member(member_path, options))
+      output_file.close
+      destination_path
+    end
+
 
     def default_backend
       BACKEND_PREFERENCE.each do |name|

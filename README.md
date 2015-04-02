@@ -161,16 +161,21 @@ Things that need to be done, in no particular order:
   * Add support for more backends.
   * test with different majour versions of current supported backends.
   * Standardize Exception classes and when to raise them.
+  * #read_*, #extract_* and #write_* methods should accept a block.
   * #extract_members: extract multiple files with one command (new method).
   * #extract_member: extract file to path using original member name.
   * #write_member: add entire directory (recursively or not) to archive.
-  * #write_members: add multiple files by wildcard.
+  * #write_members: add multiple files by wildcard (new method).
+  * #add_member: add file to archive from filesystem (new method).
+  * #add_members: add multiple files to archive from filesystem (new method).
+  * #remove_member: remove a member file from the archive (new_method).
+  * #remove_members: remove multiple member files from the archive (new_method).
   * #read_members: read multiple files wildcard.
-  * #read_members: read multiple files via prefix (as #list_members does).
-  * #extract_members: extract multiple files via prefix (as #list_members does).
-  * #extract_members: extract multiple files wildcard.
+  * #read_members: read multiple files via prefix as #list_members does.
+  * #extract_members: extract multiple files via prefix as #list_members does (new method).
+  * #extract_members: extract multiple files wildcard (new method).
   * #member_info: return information (name, size, etc) about member (new method).
-  * #read_member_stream: return member as IO Stream to keeping large amounts of data in memory. Accepts block. (new method)
+  * #read_member_stream: return member as IO Stream to keeping large amounts of data in memory (new method).
 
 ## Contributing
 

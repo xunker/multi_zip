@@ -24,12 +24,12 @@ module MultiZip::Backend::Rubyzip
 
   def extract_member(member_path, destination_path, options = {})
     Zip::File.open(@filename) do |zip_file|
-      output_file = File.new(destination_path, 'wb')
+      output_file = ::File.new(destination_path, 'wb')
 
       stream = zip_file.glob(member_path).first.get_input_stream
 
       while chunk = stream.read(BUFFER_SIZE)
-        output_file.print chunk
+        output_file.write chunk
       end
 
       output_file.close

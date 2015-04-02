@@ -30,11 +30,11 @@ module MultiZip::Backend::Zipruby
 
   def extract_member(member_path, destination_path, options = {})
     Zip::Archive.open(@filename) do |ar|
-      output_file = File.new(destination_path, 'wb')
+      output_file = ::File.new(destination_path, 'wb')
 
       ar.fopen(member_path) do |member|
         while chunk = member.read(BUFFER_SIZE)
-          output_file.print chunk
+          output_file.write chunk
         end
       end
 

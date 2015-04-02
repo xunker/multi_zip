@@ -1,13 +1,7 @@
 require 'multi_zip'
 
-# use this begin block to avoid circular reloading of pry.
-begin
-  gem 'pry'
-  gem 'pry-byebug'
-rescue Gem::LoadError
-  require 'pry'
-  require 'pry-byebug'
-end
+require 'pry'
+require 'pry-byebug'
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|

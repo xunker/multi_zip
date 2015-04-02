@@ -196,16 +196,5 @@ shared_examples 'zip backend' do |backend_name|
         end
       end
     end
-  end
-
-  describe '#write_members'
-
-  describe '#add_member'
-
-  describe '#add_members'
-
-  describe '#remove_member'
-
-  describe '#remove_members'
-  
+  end  
 end
