@@ -27,6 +27,20 @@ def fixture_zip_file
   'spec/fixtures/mymedia_lite-20130621.epub'
 end
 
+def test_with_rubyzip?
+  # rubyzip requires ruby >= 1.9.2
+  Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("1.9.2")
+end
+
+def backends_to_test
+  [
+    :zipruby,
+    (test_with_rubyzip? ? :rubyzip : nil),
+    :archive_zip
+  ].compact
+end
+
+
 BACKEND_CONSTANTS = {}
 BACKEND_CLASSES = {}
 
@@ -53,9 +67,11 @@ def apply_constants(lib)
   end
 end
 
-require 'zip'
-set_backend_class(:rubyzip, Zip)
-stash_constants(:rubyzip)
+if test_with_rubyzip?
+  require 'zip'
+  set_backend_class(:rubyzip, Zip)
+  stash_constants(:rubyzip)
+end
 
 require 'zipruby'
 set_backend_class(:zipruby, Zip)
