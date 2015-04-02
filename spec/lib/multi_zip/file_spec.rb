@@ -1,14 +1,14 @@
 require 'spec_helper'
 
-RSpec.describe MultiZip::File do
+RSpec.describe MultiZip do
   let(:filename) { fixture_zip_file }
-  let(:subject) { MultiZip::File.new(filename) }
+  let(:subject) { MultiZip.new(filename) }
 
   describe '.open' do
     it 'calls .new with same args' do
       options = { :foo => :bar }
-      expect(MultiZip::File).to receive(:new).with(filename, options)
-      MultiZip::File.open(filename, options)
+      expect(MultiZip).to receive(:new).with(filename, options)
+      MultiZip.open(filename, options)
     end
   end
 
@@ -16,7 +16,7 @@ RSpec.describe MultiZip::File do
     context 'supported backends' do
       before do
         # so we don't get NoSupportedBackendError in subject.
-        expect_any_instance_of(MultiZip::File).to receive(:default_backend)
+        expect_any_instance_of(MultiZip).to receive(:default_backend)
       end
 
       backends_to_test.each do |backend_name|

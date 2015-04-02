@@ -1,3 +1,3 @@
-module MultiZip
+class MultiZip
   VERSION = "0.1.1"
 end

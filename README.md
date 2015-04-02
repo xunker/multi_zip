@@ -55,35 +55,35 @@ If you have multiple gems available and want to choose your backend, you can
 do that in the initializer:
 
 ```ruby
-zip = MultiZip::File.new(filename, backend: :rubyzip) }
+zip = MultiZip.new(filename, backend: :rubyzip) }
 ```
 
-..or by calling `#backend=` on a MultiZip::File instance:
+..or by calling `#backend=` on a MultiZip instance:
 
 ```ruby
-zip = MultiZip::File.new(filename)
+zip = MultiZip.new(filename)
 zip.backend = :rubyzip
 ```
 
 You can see what backends are supported:
 
 ```ruby
-> MultiZip::File.supported_backends
+> MultiZip.supported_backends
  => [:rubyzip, :archive_zip, :zipruby]
 ```
 
 You can also check which of these supported backends is currently available:
 
 ```ruby
-> MultiZip::File.available_backends
+> MultiZip.available_backends
  => [] 
 > require 'archive/zip'
  => true 
-> MultiZip::File.available_backends
+> MultiZip.available_backends
  => [:archive_zip] 
 > require 'zip'
  => true 
-> MultiZip::File.available_backends
+> MultiZip.available_backends
  => [:rubyzip, :archive_zip]
 ```
 
@@ -91,7 +91,7 @@ You can also check which of these supported backends is currently available:
 
 For all the examples below, assume this:
 ```ruby
-zip = MultiZip::File.open('/path/to/archive.zip')
+zip = MultiZip.open('/path/to/archive.zip')
 ```
 
 #### Read file from zip archive
@@ -145,7 +145,7 @@ zip.list_members
 `.open` can also receive a block:
 
 ```ruby
-MultiZip::File.open('/path/to/archive.zip') do |archive|
+MultiZip.open('/path/to/archive.zip') do |archive|
   # commands
 end
 ```

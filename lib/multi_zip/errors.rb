@@ -1,4 +1,4 @@
-module MultiZip
+class MultiZip
   class BaseError < RuntimeError
   end
   class NoSupportedBackendError < BaseError
