@@ -24,7 +24,7 @@ instead.
 
 This work was inspired by [multi_json](https://github.com/intridea/multi_json)
 and [multi_xml](https://github.com/sferik/multi_xml). The first version was
-written in while I was visiting Japan in 2014 and is dedicated to all the
+written while I was visiting Japan in 2014 and is dedicated to all the
 rubyists I met there.
 
 ## Installation
