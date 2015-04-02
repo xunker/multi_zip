@@ -33,7 +33,7 @@ def test_with_rubyzip?
     gem 'rubyzip'
     return true
   end
-  retrun false
+  false
 rescue Gem::LoadError
   false  
 end
