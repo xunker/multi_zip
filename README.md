@@ -1,24 +1,30 @@
+[![Build Status](https://travis-ci.org/xunker/multi_zip.png?branch=master)](https://travis-ci.org/xunker/multi_zip)
 # MultiZip
 
-Provides a standard, generic interface for zipping/unzipping files using
-whatever gems are present on the system.
+Provides a standard interface for zipping/unzipping files using whatever gems
+are present on the system. It will detect what gems are available and
+automatically use them without requiring you to write specific code for each.
+This allows for code that is more portable and helps to avoid namespace
+collisions and other implementation restrictions.
 
-This lets you to avoid namespace collisions or implementation restrictions
-in order to make your code more portable.
+MultiZip provides a very small and focused set of functions:
 
-MultiZip provides a very small, very focused set up functions:
-
- * Create new archives.
- * Add members to a archive from string or a local file.
- * Read members from a archive in to a variable.
- * Extract members from an archive to a file.
- * List members inside an archive.
- # Get information for a single member. (Pending TODO)
- * Delete members from an archive. (Pending TODO)
+ * Create a new zip archive or open existing one.
+ * Add files to a archive from using content from a variable or a local file.
+ * Read files from a archive in to a variable.
+ * Extract files from an archive to a local file.
+ * List files contained in an archive.
+ * Get information for a file in an archive. (Pending TODO)
+ * Delete files from an archive. (Pending TODO)
 
 It is meant to to do the most common zip/unzip tasks. For anything more
-complicated than these basics you should use a specific a specific (un)zipping
-library instead.
+complicated than these basics you should use a specific (un)zipping library
+instead.
+
+This work was inspired by [multi_json](https://github.com/intridea/multi_json)
+and [multi_xml](https://github.com/sferik/multi_xml). The first version was
+written in while I was visiting Japan in 2014 and is dedicated to all the
+rubyists I met there.
 
 ## Installation
 
