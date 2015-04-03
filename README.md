@@ -7,7 +7,7 @@ interface regardless of which is being used. This allows for code that is more
 portable and helps to avoid namespace collisions (zipruby vs. rubyzip for example)
 and other implementation restrictions (MRI vs. Jruby, Unix vs. Windows, etc,).
 
-It currently support `.zip` archives only. See TODO for info on others.
+It currently supports `.zip` archives only. See TODO for info on others.
 
 MultiZip provides a very small and focused set of functions:
 
@@ -38,7 +38,7 @@ rubyists I met there.
 
 ## Installation
 
-Do the standard dance: Either add `gem 'multi_zip` to your Gemfile or run
+Do the standard dance: Either add `gem 'multi_zip'` to your Gemfile or run
 `gem install multi_zip`.
 
 __IMPORTANT NEXT STEP:__ You will also need a zip backend gem installed and
