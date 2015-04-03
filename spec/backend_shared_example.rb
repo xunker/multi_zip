@@ -11,14 +11,22 @@ shared_examples 'zip backend' do |backend_name|
   describe '#read_member' do
     context "backend: #{backend_name}" do
       context 'member found' do
-        it 'returns the file as a string' do
-          expect(
-            subject.read_member(archive_member_files.first).bytesize
-          ).to eq(archive_member_size(archive_member_files.first))
+        archive_member_files.each do |member_file|
+          it "returns '#{member_file}' as a string" do
+            expect(
+              subject.read_member(member_file).bytesize
+            ).to eq(
+              archive_member_size(member_file)
+            )
+          end
         end
       end
 
       context 'member not found' do
+        it 'raises MemberNotFoundError'
+      end
+
+      context 'member is not a file' do
         it 'raises MemberNotFoundError'
       end
 
@@ -50,6 +58,10 @@ shared_examples 'zip backend' do |backend_name|
             expect(extracted_files[i].bytesize).to eq(archive_member_size(member))
           end
         end
+      end
+
+      context 'one of the members is not a file' do
+        it 'raises MemberNotFoundError'
       end
 
       context 'one of the members is not found' do
@@ -93,6 +105,10 @@ shared_examples 'zip backend' do |backend_name|
         end
       end
 
+      context 'member is not a file' do
+        it 'raises MemberNotFoundError'
+      end
+
       context 'member not found' do
         it 'raises MemberNotFoundError'
       end
@@ -132,7 +148,9 @@ shared_examples 'zip backend' do |backend_name|
           end
 
           context 'no files with that prefix exist' do
-            it 'returns empty array'
+            it 'returns empty array' do
+              expect(subject.list_members('doesnt_exist/')).to eq( [ ] )
+            end
           end
         end
       end
@@ -161,9 +179,18 @@ shared_examples 'zip backend' do |backend_name|
 
   describe '#member_exists?' do
     context "backend: #{backend_name}" do
-      it 'returns true if member exists' do
-        expect(subject.member_exists?(archive_member_files.first)).to be_truthy
+      context 'member is a file' do
+        it 'returns true if member exists' do
+          expect(subject.member_exists?(archive_member_files.first)).to be_truthy
+        end
       end
+
+      context 'member is a directory' do
+        it 'returns true if member exists' do
+          expect(subject.member_exists?(archive_member_directories.first)).to be_truthy
+        end
+      end
+
       it 'returns false if member does not exist' do
         expect(subject.member_exists?('does_not_exist')).to be_falsey
       end

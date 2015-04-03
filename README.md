@@ -229,6 +229,8 @@ Things that need to be done, in no particular order:
   * #member_info: return information (name, size, etc) about member (new method).
   * #read_member_stream: return member as IO Stream to keeping large amounts of data in memory (new method).
   * Write guide to show others how they can add their own backends gems.
+  * #member_type: return the type of the member (new method).
+  * #member_exists?: accept an argument to specify the file type (file, dir, symlink, etc).
 
 Things that I'd **like** to do, but that are probably not realistic because
 they cannot be sufficiently abstracted across all backend gems:
