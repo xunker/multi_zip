@@ -3,14 +3,14 @@ module MultiZip::Backend::Zipruby
   def read_member(member_path, options = {})
     # detect if called asked for a directory instead of a file
     member_not_found!(member_path) if member_path =~ /\/$/
-    Zip::Archive.open(@filename) do |ar|
+    read_operation do |ar|
       exists_in_archive!(ar, member_path)
       ar.fopen(member_path) {|member| member.read}
     end
   end
 
   def list_members(prefix=nil, options={})
-    Zip::Archive.open(@filename) do |zip|
+    read_operation do |zip|
       list = []
       zip.num_files.times do |i|
         list << zip.get_name(i)
@@ -32,7 +32,7 @@ module MultiZip::Backend::Zipruby
   end
 
   def extract_member(member_path, destination_path, options = {})
-    Zip::Archive.open(@filename) do |ar|
+    read_operation do |ar|
       exists_in_archive!(ar, member_path)
       output_file = ::File.new(destination_path, 'wb')
 
@@ -63,6 +63,19 @@ private
     unless exists_in_archive?(zip, member_path)
       zip.close
       raise member_not_found!(member_path)
+    end
+  end
+
+  def read_operation(&blk)
+    Zip::Archive.open(@filename) do |ar|
+      yield(ar)
+    end
+  rescue Zip::Error => e
+    # not the best way to detect the class of error.
+    if e.message.match('Not a zip archive')
+      raise MultiZip::InvalidArchiveError.new(@filename, e)
+    else
+      raise
     end
   end
 end

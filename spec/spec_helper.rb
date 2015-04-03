@@ -29,6 +29,10 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 end
 
+def invalid_archive_fixture_filename
+  'spec/fixtures/invalid.zip'
+end
+
 def archive_fixture_filename
   'spec/fixtures/test.zip'
 end

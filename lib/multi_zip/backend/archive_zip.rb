@@ -2,7 +2,7 @@ module MultiZip::Backend::ArchiveZip
   BUFFER_SIZE = 8192
 
   def read_member(member_path, options = {})
-    Archive::Zip.open(@filename) do |zip|
+    read_operation do |zip|
       member = zip.find{|m| m.zip_path == member_path}
       if member && member.file?
         return member.file_data.read.to_s
@@ -14,7 +14,7 @@ module MultiZip::Backend::ArchiveZip
   end
 
   def list_members(prefix=nil, options={})
-    Archive::Zip.open(@filename) do |zip|
+    read_operation do |zip|
       zip.entries.map(&:zip_path).select{|n|
         prefix ? n =~ /^#{prefix}/ : true
       }.sort
@@ -48,7 +48,7 @@ module MultiZip::Backend::ArchiveZip
   end
 
   def extract_member(member_path, destination_path, options = {}) 
-    Archive::Zip.open(@filename) do |zip|
+    read_operation do |zip|
       if member = zip.find{|m| m.zip_path == member_path}
         output_file = ::File.new(destination_path, 'wb')
         while chunk = member.file_data.read(BUFFER_SIZE)
@@ -61,5 +61,15 @@ module MultiZip::Backend::ArchiveZip
         member_not_found!(member_path)
       end
     end
+  end
+
+private
+
+  def read_operation(&blk)
+    Archive::Zip.open(@filename) do |zip|
+      yield(zip)
+    end
+  rescue Archive::Zip::UnzipError => e
+    raise MultiZip::InvalidArchiveError.new(@filename, e)
   end
 end

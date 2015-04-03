@@ -51,7 +51,12 @@ shared_examples 'zip backend' do |backend_name|
       end
 
       context 'invalid or unreadable archive' do
-        it 'raises ArchiveInvalidError'
+        let(:filename) { invalid_archive_fixture_filename }
+        it 'raises ArchiveInvalidError' do
+          expect(
+            lambda { subject.read_member(archive_member_files.first) }
+          ).to raise_error(MultiZip::InvalidArchiveError)
+        end
       end
     end
   end
@@ -97,7 +102,12 @@ shared_examples 'zip backend' do |backend_name|
       end
 
       context 'invalid or unreadable archive' do
-        it 'raises ArchiveInvalidError'
+        let(:filename) { invalid_archive_fixture_filename }
+        it 'raises ArchiveInvalidError' do
+          expect(
+            lambda { subject.read_member(archive_member_files.first) }
+          ).to raise_error(MultiZip::InvalidArchiveError)
+        end
       end
     end
   end
@@ -147,7 +157,12 @@ shared_examples 'zip backend' do |backend_name|
       end
 
       context 'invalid or unreadable archive' do
-        it 'raises ArchiveInvalidError'
+        let(:filename) { invalid_archive_fixture_filename }
+        it 'raises ArchiveInvalidError' do
+          expect(
+            lambda { subject.read_member(archive_member_files.first) }
+          ).to raise_error(MultiZip::InvalidArchiveError)
+        end
       end
     end
   end
@@ -193,7 +208,12 @@ shared_examples 'zip backend' do |backend_name|
       end
 
       context 'invalid or unreadable archive' do
-        it 'raises ArchiveInvalidError'
+        let(:filename) { invalid_archive_fixture_filename }
+        it 'raises ArchiveInvalidError' do
+          expect(
+            lambda { subject.read_member(archive_member_files.first) }
+          ).to raise_error(MultiZip::InvalidArchiveError)
+        end
       end
     end
   end
@@ -229,7 +249,12 @@ shared_examples 'zip backend' do |backend_name|
       end
 
       context 'invalid or unreadable archive' do
-        it 'raises ArchiveInvalidError'
+        let(:filename) { invalid_archive_fixture_filename }
+        it 'raises ArchiveInvalidError' do
+          expect(
+            lambda { subject.read_member(archive_member_files.first) }
+          ).to raise_error(MultiZip::InvalidArchiveError)
+        end
       end
     end
   end

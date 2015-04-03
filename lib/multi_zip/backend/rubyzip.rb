@@ -1,7 +1,7 @@
 module MultiZip::Backend::Rubyzip
   BUFFER_SIZE = 8192
   def read_member(member_path, options = {})
-    Zip::File.open(@filename) do |zip_file|
+    read_operation do |zip_file|
       if member = zip_file.glob(member_path).first
         member.get_input_stream.read
       else
@@ -12,7 +12,7 @@ module MultiZip::Backend::Rubyzip
   end
 
   def list_members(prefix=nil, options={})
-    Zip::File.open(@filename) do |zip_file|
+    read_operation do |zip_file|
       zip_file.map(&:name).select{|n| prefix ? n =~ /^#{prefix}/ : true}.sort
     end
   end
@@ -28,7 +28,7 @@ module MultiZip::Backend::Rubyzip
   end
 
   def extract_member(member_path, destination_path, options = {})
-    Zip::File.open(@filename) do |zip_file|
+    read_operation do |zip_file|
       if member = zip_file.glob(member_path).first
         stream = member.get_input_stream
 
@@ -45,5 +45,20 @@ module MultiZip::Backend::Rubyzip
       end
     end
     destination_path
+  end
+
+private
+
+  def read_operation(&blk)
+    Zip::File.open(@filename) do |zip_file|
+      yield(zip_file)
+    end
+  rescue Zip::Error => e
+    # not the best way to detect the class of error.
+    if e.message.match('Zip end of central directory signature not found')
+      raise MultiZip::InvalidArchiveError.new(@filename, e)
+    else
+      raise
+    end
   end
 end
