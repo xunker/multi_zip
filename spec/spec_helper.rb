@@ -23,7 +23,7 @@ RSpec.configure do |config|
 
   # allow you to focus on just one test by adding 'focus: true' to the
   # describe, context or it block.
-  config.filter_run focus: true
+  config.filter_run :focus => true
   config.run_all_when_everything_filtered = true
 
   Kernel.srand config.seed
