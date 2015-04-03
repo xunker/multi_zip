@@ -34,6 +34,10 @@ shared_examples 'zip backend' do |backend_name|
         it 'raises MemberNotFoundError'
       end
 
+      context 'member is not a file' do
+        it 'raises MemberNotFoundError'
+      end
+
       context 'archive not found' do
         it 'raises ArchiveNotFoundError'
       end
@@ -111,15 +115,15 @@ shared_examples 'zip backend' do |backend_name|
       end
 
       context 'member is not a file' do
+        it 'raises MemberNotFoundError'
+      end
+
+      context 'member not found' do
         it 'raises MemberNotFoundError' do
           expect(
             lambda { subject.extract_member('doesnt_exist', tempfile.path) }
           ).to raise_error(MultiZip::MemberNotFoundError)
         end
-      end
-
-      context 'member not found' do
-        it 'raises MemberNotFoundError'
       end
 
       context 'archive not found' do
