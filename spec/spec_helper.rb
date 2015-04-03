@@ -54,7 +54,8 @@ def backends_to_test
   ].compact
 end
 
-warn "*** Backends to test under #{RUBY_ENGINE} #{RUBY_VERSION}: #{backends_to_test.map(&:to_s).join(', ')} ***"
+current_ruby_engine = defined?(RUBY_ENGINE) ? RUBY_ENGINE : 'ruby'
+warn "*** Backends to test under #{current_ruby_engine} #{RUBY_VERSION}: #{backends_to_test.map(&:to_s).join(', ')} ***"
 excluded_backends = MultiZip::BACKENDS.keys - backends_to_test
 if excluded_backends.length > 0
   warn "*** Backends that will not be tested: #{excluded_backends.map(&:to_s).join(', ')} ***"
