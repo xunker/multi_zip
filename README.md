@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/xunker/multi_zip.png?branch=master)](https://travis-ci.org/xunker/multi_zip)
-# MultiZip
+# [MultiZip](https://github.com/xunker/multi_zip)
 
 MultiZip is a Ruby Gem that abstracts other zipping/unzipping gems. It
 automatically detects what gems are available and provides a consistent
@@ -7,7 +7,7 @@ interface regardless of which is being used. This allows for code that is more
 portable and helps to avoid namespace collisions (zipruby vs. rubyzip for example)
 and other implementation restrictions (MRI vs. Jruby, Unix vs. Windows, etc,).
 
-It currently support `.zip` format archives only. See TODO for info on others.
+It currently support `.zip` archives only. See TODO for info on others.
 
 MultiZip provides a very small and focused set of functions:
 
@@ -25,17 +25,11 @@ complicated than these basics, you should use a specific (un)zipping library
 instead.
 
 Rubies supported (see [CI status](https://travis-ci.org/xunker/multi_zip) for more detail):
-  * MRI 2.x.x, 1.9.3.
-    - with rubyzip, zipruby and archive-zip.
-  * 1.8.7 and REE.
-    - with zipruby and archive-zip.
-    - rubyzip does not support 1.8.7.
+  * MRI 2.x.x, 1.9.3, 1.8.7 and REE.
   * Jruby
-    - with archive-zip.
-    - zipruby and rubyzip do not support Jruby.
   * Rubinius 2
-    - with archive-zip.
-    - zipruby and rubyzip do not support Rubinius.
+
+For information about which backend gems work in which ruby, see [Supported Backend Gems](#supported-backend-gems).
 
 This work was inspired by [multi_json](https://github.com/intridea/multi_json)
 and [multi_xml](https://github.com/sferik/multi_xml). The first version was
@@ -160,31 +154,35 @@ MultiZip.open('/path/to/archive.zip') do |archive|
 end
 ```
 
-## Supported backends
-
-### Current
+## Supported backend gems
 
   * [rubyzip](https://rubygems.org/gems/rubyzip)
+    - Works in MRI 1.9.3 and 2.x.x.
+    - Gem doesn't support MRI 1.8.7, Jruby or Rubinius.
   * [archive-zip](https://rubygems.org/gems/archive-zip)
+    - Works in all MRI, Jruby and Rubinius.
   * [zipruby](https://rubygems.org/gems/zipruby)
+    - Works in all MRI.
+    - Gem doesn't support Jruby or Rubinius.
 
-### Planned
+Planned for the future:
 
   * [archive](https://rubygems.org/gems/archive)
   * [unix_utils](https://rubygems.org/gems/unix_utils)
+  * Other archive formats like gzip, bzip2, 7zip, tar, etc.
   * Jruby-specific gems
-  * Others (please suggest them in [new issue](https://github.com/xunker/multi_zip/issues/new))
+  * Others (please suggest them in a [new issue](https://github.com/xunker/multi_zip/issues/new))
 
 ## Notes
 
-### No `#close` method?
+#### No `#close` method?
 
 You'll notice that there is no `#close` method. All instance methods will open
 the archive, perform the operation and then close it. The archive is not
 opened or accessed until a method it called in the instance, and the archive
 is not kept open between method calls.
 
-### Support for other Rubies
+#### Support for other Rubies
 
 Supporting MRI, Jruby and Rubinius covers 95% of the production-ruby market.
 However, In the future I plan on **trying** to support:
