@@ -32,6 +32,8 @@ module MultiZip::Backend::Zipruby
   end
 
   def extract_member(member_path, destination_path, options = {})
+    # detect if called asked for a directory instead of a file
+    member_not_found!(member_path) if member_path =~ /\/$/
     read_operation do |ar|
       exists_in_archive!(ar, member_path)
       output_file = ::File.new(destination_path, 'wb')

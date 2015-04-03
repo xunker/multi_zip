@@ -23,19 +23,11 @@ shared_examples 'zip backend' do |backend_name|
       end
 
       context 'member not found' do
-        it 'raises MemberNotFoundError' do
-          expect(
-            lambda { subject.read_member('doesnt_exist') }
-          ).to raise_error(MultiZip::MemberNotFoundError)
-        end
+        it_behaves_like 'raises MemberNotFoundError', :read_member, 'doesnt_exist'
       end
 
       context 'member is a directory' do
-        it 'raises MemberNotFoundError' do
-          expect(
-            lambda { subject.read_member(archive_member_directories.first) }
-          ).to raise_error(MultiZip::MemberNotFoundError)
-        end
+        it_behaves_like 'raises MemberNotFoundError', :read_member, archive_member_directories.first
       end
 
       context 'archive not found' do
@@ -51,12 +43,7 @@ shared_examples 'zip backend' do |backend_name|
       end
 
       context 'invalid or unreadable archive' do
-        let(:filename) { invalid_archive_fixture_filename }
-        it 'raises ArchiveInvalidError' do
-          expect(
-            lambda { subject.read_member(archive_member_files.first) }
-          ).to raise_error(MultiZip::InvalidArchiveError)
-        end
+        it_behaves_like 'raises InvalidArchiveError', :read_member, archive_member_files.first
       end
     end
   end
@@ -74,19 +61,13 @@ shared_examples 'zip backend' do |backend_name|
       end
 
       context 'one of the members is a directory' do
-        it 'raises MemberNotFoundError' do
-          expect(
-            lambda { subject.read_member(archive_member_directories.first) }
-          ).to raise_error(MultiZip::MemberNotFoundError)
-        end
+        it_behaves_like 'raises MemberNotFoundError', :read_members,
+          [ archive_member_files.first, archive_member_directories.first ]
       end
 
       context 'one of the members is not found' do
-        it 'raises MemberNotFoundError' do
-          expect(
-            lambda { subject.read_members([archive_member_files.first, 'doesnt_exist']) }
-          ).to raise_error(MultiZip::MemberNotFoundError)
-        end
+        it_behaves_like 'raises MemberNotFoundError', :read_members,
+          [ archive_member_files.first, 'doesnt_exist' ]
       end
 
       context 'archive not found' do
@@ -102,12 +83,8 @@ shared_examples 'zip backend' do |backend_name|
       end
 
       context 'invalid or unreadable archive' do
-        let(:filename) { invalid_archive_fixture_filename }
-        it 'raises ArchiveInvalidError' do
-          expect(
-            lambda { subject.read_member(archive_member_files.first) }
-          ).to raise_error(MultiZip::InvalidArchiveError)
-        end
+        it_behaves_like 'raises InvalidArchiveError', :read_members,
+          [ archive_member_files.first, archive_member_directories.first ]
       end
     end
   end
@@ -131,7 +108,7 @@ shared_examples 'zip backend' do |backend_name|
       context 'member is a directory' do
         it 'raises MemberNotFoundError' do
           expect(
-            lambda { subject.read_member(archive_member_directories.first) }
+            lambda { subject.extract_member(archive_member_directories.first, tempfile.path) }
           ).to raise_error(MultiZip::MemberNotFoundError)
         end
       end
@@ -160,7 +137,7 @@ shared_examples 'zip backend' do |backend_name|
         let(:filename) { invalid_archive_fixture_filename }
         it 'raises ArchiveInvalidError' do
           expect(
-            lambda { subject.read_member(archive_member_files.first) }
+            lambda { subject.extract_member(archive_member_files.first, tempfile.path) }
           ).to raise_error(MultiZip::InvalidArchiveError)
         end
       end
@@ -208,12 +185,7 @@ shared_examples 'zip backend' do |backend_name|
       end
 
       context 'invalid or unreadable archive' do
-        let(:filename) { invalid_archive_fixture_filename }
-        it 'raises ArchiveInvalidError' do
-          expect(
-            lambda { subject.read_member(archive_member_files.first) }
-          ).to raise_error(MultiZip::InvalidArchiveError)
-        end
+        it_behaves_like 'raises InvalidArchiveError', :list_members
       end
     end
   end
@@ -249,12 +221,7 @@ shared_examples 'zip backend' do |backend_name|
       end
 
       context 'invalid or unreadable archive' do
-        let(:filename) { invalid_archive_fixture_filename }
-        it 'raises ArchiveInvalidError' do
-          expect(
-            lambda { subject.read_member(archive_member_files.first) }
-          ).to raise_error(MultiZip::InvalidArchiveError)
-        end
+        it_behaves_like 'raises InvalidArchiveError', :member_exists?, archive_member_files.first
       end
     end
   end
@@ -369,4 +336,17 @@ shared_examples 'zip backend' do |backend_name|
       end
     end
   end  
+end
+
+shared_examples 'raises MemberNotFoundError' do |*args|
+  it 'raises MemberNotFoundError' do
+    expect(lambda{ subject.send(args.shift, *args) }).to raise_error(MultiZip::MemberNotFoundError)
+  end
+end
+
+shared_examples 'raises InvalidArchiveError' do |*args|
+  let(:filename) { invalid_archive_fixture_filename }
+  it 'raises InvalidArchiveError' do
+    expect(lambda{ subject.send(args.shift, *args) }).to raise_error(MultiZip::InvalidArchiveError)
+  end
 end

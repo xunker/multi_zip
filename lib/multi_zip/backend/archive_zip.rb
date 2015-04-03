@@ -49,7 +49,8 @@ module MultiZip::Backend::ArchiveZip
 
   def extract_member(member_path, destination_path, options = {}) 
     read_operation do |zip|
-      if member = zip.find{|m| m.zip_path == member_path}
+      member = zip.find{|m| m.zip_path == member_path}
+      if member && member.file?
         output_file = ::File.new(destination_path, 'wb')
         while chunk = member.file_data.read(BUFFER_SIZE)
           output_file.write chunk
