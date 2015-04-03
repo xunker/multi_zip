@@ -1,5 +1,5 @@
 shared_examples 'zip backend' do |backend_name|
-  let(:filename) { fixture_zip_file }
+  let(:filename) { archive_fixture_filename }
   let(:subject) { MultiZip.new(filename, :backend => backend_name) }
 
   before do
@@ -13,8 +13,8 @@ shared_examples 'zip backend' do |backend_name|
       context 'member found' do
         it 'returns the file as a string' do
           expect(
-            subject.read_member('OEBPS/text/book_0002.xhtml').bytesize
-          ).to eq(13_103)
+            subject.read_member(archive_member_files.first).bytesize
+          ).to eq(archive_member_size(archive_member_files.first))
         end
       end
 
@@ -44,15 +44,11 @@ shared_examples 'zip backend' do |backend_name|
     context "backend: #{backend_name}" do
       context 'all members found' do
         it 'returns the member content as an array a string in order of args' do
-          extracted_files = subject.read_members([
-              'OEBPS/text/book_0000.xhtml',
-              'OEBPS/text/book_0001.xhtml',
-              'OEBPS/text/book_0002.xhtml'
-          ])
+          extracted_files = subject.read_members(archive_member_files)
 
-          expect(extracted_files[0].bytesize).to eq(615)
-          expect(extracted_files[1].bytesize).to eq(1_081)
-          expect(extracted_files[2].bytesize).to eq(13_103)
+          archive_member_files.each_with_index do |member, i|
+            expect(extracted_files[i].bytesize).to eq(archive_member_size(member))
+          end
         end
       end
 
@@ -86,10 +82,10 @@ shared_examples 'zip backend' do |backend_name|
     context "backend: #{backend_name}" do
       context 'member found' do
         let(:tempfile) { Tempfile.new('multi_zip_test') }
-        let!(:extraction_return) { subject.extract_member('OEBPS/text/book_0002.xhtml', tempfile.path) }
+        let!(:extraction_return) { subject.extract_member(archive_member_files.first, tempfile.path) }
         after { tempfile.delete }
         it 'writes the file to the local filesystem' do
-          expect(tempfile.size).to eq(13_103)
+          expect(tempfile.size).to eq(archive_member_size(archive_member_files.first))
         end
 
         it 'returns the file system path written to' do
@@ -123,44 +119,14 @@ shared_examples 'zip backend' do |backend_name|
     context "backend: #{backend_name}" do
       context 'file contains members' do
         it 'returns array member file names' do
-          expect(subject.list_members).to eq(
-            [
-              "META-INF/",
-              "META-INF/container.xml",
-              "OEBPS/",
-              "OEBPS/images/",
-              "OEBPS/images/akahata.jpg",
-              "OEBPS/images/cover.jpg",
-              "OEBPS/images/gari01.jpg",
-              "OEBPS/images/gari02.jpg",
-              "OEBPS/images/gari03.jpg",
-              "OEBPS/images/tsuno.png",
-              "OEBPS/images/yashima.jpg",
-              "OEBPS/mymedia_lite.opf",
-              "OEBPS/styles/",
-              "OEBPS/styles/ebook_common.css",
-              "OEBPS/styles/ebook_style.css",
-              "OEBPS/styles/ebook_style_h.css",
-              "OEBPS/styles/ebook_style_v.css",
-              "OEBPS/text/",
-              "OEBPS/text/book_0000.xhtml",
-              "OEBPS/text/book_0001.xhtml",
-              "OEBPS/text/book_0002.xhtml",
-              "OEBPS/text/book_0003.xhtml",
-              "OEBPS/text/book_0004.xhtml",
-              "OEBPS/text/book_0005.xhtml",
-              "OEBPS/text/book_0006.xhtml",
-              "OEBPS/toc.xhtml",
-              "mimetype"
-            ]
-          )
+          expect(subject.list_members).to eq(archive_member_names)
         end
 
         context 'prefix provided' do
           context 'files with that prefix exist' do
             it 'returns only files with that prefix' do
-              expect(subject.list_members('META-INF/')).to eq(
-                [ "META-INF/", "META-INF/container.xml" ]
+              expect(subject.list_members('dir_1/')).to eq(
+                [ 'dir_1/', 'dir_1/file_3.txt' ]
               )
             end
           end
@@ -196,7 +162,7 @@ shared_examples 'zip backend' do |backend_name|
   describe '#member_exists?' do
     context "backend: #{backend_name}" do
       it 'returns true if member exists' do
-        expect(subject.member_exists?('mimetype')).to be_truthy
+        expect(subject.member_exists?(archive_member_files.first)).to be_truthy
       end
       it 'returns false if member does not exist' do
         expect(subject.member_exists?('does_not_exist')).to be_falsey
@@ -261,7 +227,7 @@ shared_examples 'zip backend' do |backend_name|
 
       context 'archive already exists' do
         before do
-          FileUtils.cp(fixture_zip_file, filename)
+          FileUtils.cp(archive_fixture_filename, filename)
           expect(File.exists?(filename)).to be_truthy
         end
 

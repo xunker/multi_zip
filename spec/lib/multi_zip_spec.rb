@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe MultiZip do
-  let(:filename) { fixture_zip_file }
+  let(:filename) { archive_fixture_filename }
   let(:subject) { MultiZip.new(filename) }
 
   describe '.open' do

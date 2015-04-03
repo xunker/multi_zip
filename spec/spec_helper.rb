@@ -21,11 +21,43 @@ RSpec.configure do |config|
 
   config.order = :random
 
+  # allow you to focus on just one test by adding 'focus: true' to the
+  # describe, context or it block.
+  config.filter_run focus: true
+  config.run_all_when_everything_filtered = true
+
   Kernel.srand config.seed
 end
 
-def fixture_zip_file
-  'spec/fixtures/mymedia_lite-20130621.epub'
+def archive_fixture_filename
+  'spec/fixtures/test.zip'
+end
+
+def archive_members
+  # assumed to reflect files in spec/fixtures/test/zip
+  {
+    'file_1.txt' => 38, # member_name => size_in_bytes
+    'file_2.txt' => 118,
+    'dir_1/' => nil, # directory
+    'dir_1/file_3.txt' => 229
+  }
+end
+
+def archive_member_size(member)
+  archive_members[member]
+end
+
+def archive_member_names
+  archive_members.keys.sort
+end
+
+def archive_member_files
+  archive_members.reject{|k,v| v.nil? }.keys.sort
+end
+
+def archive_member_directories
+  # assumed to reflect directories in spec/fixtures/test/zip
+  archive_members.select{|k,v| v.nil? }.keys.sort
 end
 
 def test_with_rubyzip?
