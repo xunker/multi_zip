@@ -56,12 +56,12 @@ def archive_member_names
 end
 
 def archive_member_files
-  archive_members.reject{|k,v| v.nil? }.keys.sort
+  Hash[archive_members.reject{|k,v| v.nil? }].keys.sort
 end
 
 def archive_member_directories
   # assumed to reflect directories in spec/fixtures/test/zip
-  archive_members.select{|k,v| v.nil? }.keys.sort
+  Hash[archive_members.select{|k,v| v.nil? }].keys.sort
 end
 
 def test_with_rubyzip?
