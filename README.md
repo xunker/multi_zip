@@ -105,6 +105,8 @@ file = zip.read_member('/path/inside/archive/to/file.txt')
 # => "This is the content of the file from the archive."
 ```
 
+Will raise `MultiZip::MemberNotFoundError` if the file can't be found.
+
 #### Read multiple files from zip archive
 
 ```ruby
@@ -115,6 +117,9 @@ files = zip.read_member(
 # => ["File one content.", "File two content."]
 ```
 
+Will raise `MultiZip::MemberNotFoundError` if one or more of the files can't
+be found.
+
 #### Extract file from zip archive to filesystem path
 
 ```ruby
@@ -124,6 +129,8 @@ file = zip.extract_member(
 )
 # => 'path/on/local/filesystem/file.txt'
 ```
+
+Will raise `MultiZip::MemberNotFoundError` if the file can't be found.
 
 #### Write file to zip archive from string
 
@@ -229,6 +236,8 @@ Things that need to be done, in no particular order:
   * #member_info: return information (name, size, etc) about member (new method).
   * #read_member_stream: return member as IO Stream to keeping large amounts of data in memory (new method).
   * Write guide to show others how they can add their own backends gems.
+  * #member_type: return the type of the member (new method).
+  * #member_exists?: accept an argument to specify the file type (file, dir, symlink, etc).
 
 Things that I'd **like** to do, but that are probably not realistic because
 they cannot be sufficiently abstracted across all backend gems:

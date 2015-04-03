@@ -123,6 +123,17 @@ class MultiZip
 
 private
 
+  def exists!(member_path)
+    unless member_exists?(member_path)
+      member_not_found!(member_path)
+    end
+    true
+  end
+
+  def member_not_found!(member_path)
+    raise MemberNotFoundError.new(member_path)
+  end
+
   def default_extract_member(member_path, destination_path, options={})
     output_file = ::File.new(destination_path, 'wb')
     output_file.write(read_member(member_path, options))

@@ -1,14 +1,15 @@
 module MultiZip::Backend::ArchiveZip
   BUFFER_SIZE = 8192
+
   def read_member(member_path, options = {})
     Archive::Zip.open(@filename) do |zip|
       if member = zip.find{|m| m.zip_path == member_path}
         return member.file_data.read.to_s
+      else
+        zip.close
+        member_not_found!(member_path)
       end
     end
-
-    # file not found in archive
-    return nil # todo: raise exception instead?
   end
 
   def list_members(prefix=nil, options={})
@@ -54,10 +55,10 @@ module MultiZip::Backend::ArchiveZip
         end
         output_file.close
         return destination_path
+      else
+        zip.close
+        member_not_found!(member_path)
       end
     end
-
-    # file not found in archive
-    return nil # todo: raise exception instead?
   end
 end
