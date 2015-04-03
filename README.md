@@ -7,6 +7,8 @@ interface regardless of which is being used. This allows for code that is more
 portable and helps to avoid namespace collisions (zipruby vs. rubyzip for example)
 and other implementation restrictions (MRI vs. Jruby, Unix vs. Windows, etc,).
 
+It currently support `.zip` format archives only. See TODO for info on others.
+
 MultiZip provides a very small and focused set of functions:
 
  * Create a new zip archive or open existing one.
@@ -23,9 +25,17 @@ complicated than these basics, you should use a specific (un)zipping library
 instead.
 
 Rubies supported (see [CI status](https://travis-ci.org/xunker/multi_zip) for more detail):
-  * MRI 2.x.x, 1.9.3, 1.8.7 and REE
+  * MRI 2.x.x, 1.9.3.
+    - with rubyzip, zipruby and archive-zip.
+  * 1.8.7 and REE.
+    - with zipruby and archive-zip.
+    - rubyzip does not support 1.8.7.
   * Jruby
+    - with archive-zip.
+    - zipruby and rubyzip do not support Jruby.
   * Rubinius 2
+    - with archive-zip.
+    - zipruby and rubyzip do not support Rubinius.
 
 This work was inspired by [multi_json](https://github.com/intridea/multi_json)
 and [multi_xml](https://github.com/sferik/multi_xml). The first version was
@@ -91,7 +101,7 @@ You can also check which of these supported backends is currently available:
 
 For all the examples below, assume this:
 ```ruby
-zip = MultiZip.open('/path/to/archive.zip')
+zip = MultiZip.new('/path/to/archive.zip')
 ```
 
 #### Read file from zip archive
@@ -140,9 +150,9 @@ zip.list_members
 # ]
 ```
 
-#### Other
+#### Creating a new instance and passing a block 
 
-`.open` can also receive a block:
+`.new` can accept a block:
 
 ```ruby
 MultiZip.open('/path/to/archive.zip') do |archive|
@@ -162,15 +172,47 @@ end
 
   * [archive](https://rubygems.org/gems/archive)
   * [unix_utils](https://rubygems.org/gems/unix_utils)
+  * Jruby-specific gems
   * Others (please suggest them in [new issue](https://github.com/xunker/multi_zip/issues/new))
+
+## Notes
+
+### No `#close` method?
+
+You'll notice that there is no `#close` method. All instance methods will open
+the archive, perform the operation and then close it. The archive is not
+opened or accessed until a method it called in the instance, and the archive
+is not kept open between method calls.
+
+### Support for other Rubies
+
+Supporting MRI, Jruby and Rubinius covers 95% of the production-ruby market.
+However, In the future I plan on **trying** to support:
+
+  * maglev
+  * ironruby
+  * macruby
+  * [kiji](https://github.com/twitter-forks/rubyenterpriseedition187-248)
+
+Currently I have travis-ci only testing on Linux. Adding macruby support also
+means testing on OS X. I would like to one-day test with MRI and Ironruby on
+Windows.
+
+MultiZip is written in pure ruby and so it should be able to run on any
+runtime that is compatible with MRI 1.8.7; however, the backend gems it uses
+may or may not work on every platform -- which is part of the reason I made
+this gem in the first place! One day I would like to support backend gems that
+are specific to Jruby/Java and Windows.
   
 ## TODO
 
 Things that need to be done, in no particular order:
 
+  * Add inline docs for methods.
   * Add support for more backends.
-  * Option to set overwrite existing archive instead of adding to it.
-  * #write_member: support IO streams.
+  * Support for backend gems to process other formats (gzip, bzip2, 7zip, tar, etc).
+  * Option to overwrite and existing archive instead of adding to it.
+  * #write_member: support for reading from IO streams.
   * test with different majour versions of current supported backends.
   * Standardize Exception classes and when to raise them.
   * #read_*, #extract_* and #write_* methods should accept a block.
@@ -188,6 +230,15 @@ Things that need to be done, in no particular order:
   * #extract_members: extract multiple files wildcard (new method).
   * #member_info: return information (name, size, etc) about member (new method).
   * #read_member_stream: return member as IO Stream to keeping large amounts of data in memory (new method).
+  * Write guide to show others how they can add their own backends gems.
+
+Things that I'd **like** to do, but that are probably not realistic because
+they cannot be sufficiently abstracted across all backend gems:
+
+  * Ability to set location and compression format and level of archive.
+  * Ability to set compression format and level of individual members (for Epub compatibility).
+  * Ability to set archive location of individual members (for Epub compatibility).
+  * Support creating, reading from and writing to password-protected or encrypted archives.
 
 ## Contributing
 
