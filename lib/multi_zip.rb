@@ -41,14 +41,6 @@ class MultiZip
     end
   end
 
-  def self.open(filename, opts = {})
-    if block_given?
-      yield(new(filename, opts))
-    else
-      new(filename, opts)
-    end
-  end
-
   def backend
     @backend ||= default_backend
   end
@@ -123,6 +115,8 @@ class MultiZip
 
 private
 
+  # Convenience method that will raise MemberNotFoundError if the member doesn't exist.
+  # Uses #member_exists? in whatever form (default or custom).
   def exists!(member_path)
     unless member_exists?(member_path)
       member_not_found!(member_path)
@@ -130,6 +124,7 @@ private
     true
   end
 
+  # Raises MemberNotFoundError
   def member_not_found!(member_path)
     raise MemberNotFoundError.new(member_path)
   end

@@ -156,7 +156,7 @@ zip.list_members
 `.new` can accept a block:
 
 ```ruby
-MultiZip.open('/path/to/archive.zip') do |archive|
+MultiZip.new('/path/to/archive.zip') do |archive|
   # commands
 end
 ```
@@ -238,6 +238,7 @@ Things that need to be done, in no particular order:
   * Write guide to show others how they can add their own backends gems.
   * #member_type: return the type of the member (new method).
   * #member_exists?: accept an argument to specify the file type (file, dir, symlink, etc).
+  * Soak-test each backend to find memory leaks.
 
 Things that I'd **like** to do, but that are probably not realistic because
 they cannot be sufficiently abstracted across all backend gems:

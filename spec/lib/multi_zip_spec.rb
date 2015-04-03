@@ -4,12 +4,8 @@ RSpec.describe MultiZip do
   let(:filename) { archive_fixture_filename }
   let(:subject) { MultiZip.new(filename) }
 
-  describe '.open' do
-    it 'calls .new with same args' do
-      options = { :foo => :bar }
-      expect(MultiZip).to receive(:new).with(filename, options)
-      MultiZip.open(filename, options)
-    end
+  describe '.new' do
+    it 'accepts a block'
   end
 
   describe '#backend=' do

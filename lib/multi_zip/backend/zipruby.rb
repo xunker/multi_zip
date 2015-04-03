@@ -1,6 +1,8 @@
 module MultiZip::Backend::Zipruby
   BUFFER_SIZE = 8192
   def read_member(member_path, options = {})
+    # detect if called asked for a directory instead of a file
+    member_not_found!(member_path) if member_path =~ /\/$/
     Zip::Archive.open(@filename) do |ar|
       exists_in_archive!(ar, member_path)
       ar.fopen(member_path) {|member| member.read}

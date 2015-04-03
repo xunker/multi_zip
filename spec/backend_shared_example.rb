@@ -30,12 +30,12 @@ shared_examples 'zip backend' do |backend_name|
         end
       end
 
-      context 'member is not a file' do
-        it 'raises MemberNotFoundError'
-      end
-
-      context 'member is not a file' do
-        it 'raises MemberNotFoundError'
+      context 'member is a directory' do
+        it 'raises MemberNotFoundError' do
+          expect(
+            lambda { subject.read_member(archive_member_directories.first) }
+          ).to raise_error(MultiZip::MemberNotFoundError)
+        end
       end
 
       context 'archive not found' do
@@ -68,8 +68,12 @@ shared_examples 'zip backend' do |backend_name|
         end
       end
 
-      context 'one of the members is not a file' do
-        it 'raises MemberNotFoundError'
+      context 'one of the members is a directory' do
+        it 'raises MemberNotFoundError' do
+          expect(
+            lambda { subject.read_member(archive_member_directories.first) }
+          ).to raise_error(MultiZip::MemberNotFoundError)
+        end
       end
 
       context 'one of the members is not found' do
@@ -114,8 +118,12 @@ shared_examples 'zip backend' do |backend_name|
         end
       end
 
-      context 'member is not a file' do
-        it 'raises MemberNotFoundError'
+      context 'member is a directory' do
+        it 'raises MemberNotFoundError' do
+          expect(
+            lambda { subject.read_member(archive_member_directories.first) }
+          ).to raise_error(MultiZip::MemberNotFoundError)
+        end
       end
 
       context 'member not found' do
@@ -259,9 +267,8 @@ shared_examples 'zip backend' do |backend_name|
         end
 
         context 'member not successfully added' do
-          it 'returns false'
-          it 'member not added to the file'
-          it 'populates #error'
+          it 'raises MemberNotAddedError'
+          it 'does not add member to the archive/archive is empty'
         end
       end
 
@@ -314,10 +321,9 @@ shared_examples 'zip backend' do |backend_name|
         end
 
         context 'member not successfully added' do
-          it 'returns false'
-          it 'member not added to the file'
-          it 'does not remove preexisting members'
-          it 'populates #error'
+          it 'raises MemberNotAddedError'
+          it 'does not add member to the archive'
+          it 'does not remove preexisting members from the archive'
         end
       end
 

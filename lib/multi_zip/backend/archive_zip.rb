@@ -3,7 +3,8 @@ module MultiZip::Backend::ArchiveZip
 
   def read_member(member_path, options = {})
     Archive::Zip.open(@filename) do |zip|
-      if member = zip.find{|m| m.zip_path == member_path}
+      member = zip.find{|m| m.zip_path == member_path}
+      if member && member.file?
         return member.file_data.read.to_s
       else
         zip.close
