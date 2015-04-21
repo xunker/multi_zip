@@ -138,6 +138,16 @@ class MultiZip
     raise NotImplementedError
   end
 
+  # Remove multiple zip member from the archive.
+  # Expected to raise MemberNotFoundError if the member_path was not found in
+  # the archive
+  #
+  # This method MAY be overridden by backend module for the sake of
+  # efficiency. Otherwise it will use #remove_member.
+  def remove_members(member_paths, options={})
+    member_paths.map{|f| remove_member(f, options) }.all?
+  end
+
 private
 
   # Convenience method that will raise MemberNotFoundError if the member doesn't exist.

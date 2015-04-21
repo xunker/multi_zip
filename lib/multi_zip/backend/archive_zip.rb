@@ -66,14 +66,23 @@ module MultiZip::Backend::ArchiveZip
 
   def remove_member(member_path, options = {})
     exists!(member_path)
-    archive_operation(:w) do |zip|
-      # I don't like mucking around with the guts like this, but recent
-      # versions of Archive::Zip have lost #remove_entry. The only other
-      # realistic option is to extract the entire archive to disk and then
-      # recreate without member_path; that may be worse...
-      warn 'Using non-public API to remove member using Archive::Zip'
-      zip.instance_eval { @entries.reject!{|m| m.zip_path == member_path} }
+    
+    # archive-zip doesn't have the #remove_entry method any more, so we do
+    # this in a really slow way: we dump the entire dir to the filesystem,
+    # delete `member_path` and zip the whole thing up again.
+    
+    Dir.mktmpdir do |tmp_dir|
+      Archive::Zip.extract(@filename, tmp_dir)
+      FileUtils.rm("#{tmp_dir}/#{member_path}")
+      
+      tempfile = Tempfile.new(['multizip_temp', '.zip'])
+      tempfile_path = tempfile.path
+      tempfile.delete
+
+      Archive::Zip.archive(tempfile_path, "#{tmp_dir}/.") # here's to hoping...
+      FileUtils.mv(tempfile_path, @filename) # scary!
     end
+
     true
   end
 

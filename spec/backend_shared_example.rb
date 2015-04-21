@@ -364,10 +364,84 @@ shared_examples 'zip backend' do |backend_name|
           it 'returns true' do
             expect(result).to be_truthy
           end
-          it 'removes the member to the file' do
+          it 'removes the member from the file' do
             expect(
               MultiZip.new(temp_filename).member_exists?(member_file_name)
             ).to be_falsey
+          end
+          it 'does not remove any other members' do
+            zip = MultiZip.new(temp_filename)
+            (archive_member_files - [member_file_name]).each do |mfn|
+              expect(zip.member_exists?(mfn)).to be_truthy
+            end
+          end
+        end
+
+        context 'member not successfully added' do
+          it 'raises MemberNotRemovedError'
+          it 'does not remove member from the archive'
+        end
+      end
+
+      context 'archive not found' do
+        it 'raises ArchiveNotFoundError'
+      end
+
+      context 'archive is not a file' do
+        it 'raises ArchiveNotFoundError'
+      end
+
+      context 'archive cannot be accessed due to permissions' do
+        it 'raises ArchiveNotAccessibleError'
+      end
+
+      context 'invalid or unreadable archive' do
+        it 'raises ArchiveInvalidError'
+      end
+    end
+  end  
+
+  describe '#remove_members' do
+    context "backend: #{backend_name}" do
+      subject { MultiZip.new(temp_filename, :backend => backend_name) }
+
+      let(:temp_filename) { "/tmp/multizip_test.zip" }
+      let(:member_file_names) { archive_member_files[0..1] }
+
+      after do
+        FileUtils.rm(temp_filename) if File.exists?(temp_filename)
+      end
+
+      context 'archive exists' do
+        before do
+          FileUtils.cp(filename, temp_filename)
+          member_file_names.each do |mfn|
+            expect(
+              MultiZip.new(temp_filename).member_exists?(mfn)
+            ).to be_truthy
+          end
+        end
+        
+        let!(:result) do
+          subject.remove_members(member_file_names)
+        end
+
+        context 'members removed successfully' do
+          it 'returns true' do
+            expect(result).to be_truthy
+          end
+          it 'removes the members from the file' do
+            member_file_names.each do |mfn|
+              expect(
+                MultiZip.new(temp_filename).member_exists?(mfn)
+              ).to be_falsey
+            end
+          end
+          it 'does not remove any other members' do
+            zip = MultiZip.new(temp_filename)
+            (archive_member_files - member_file_names).each do |mfn|
+              expect(zip.member_exists?(mfn)).to be_truthy
+            end
           end
         end
 
