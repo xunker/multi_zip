@@ -31,10 +31,10 @@ Rubies supported (see [CI status](https://travis-ci.org/xunker/multi_zip) for mo
 
 For information about which backend gems work in which ruby, see [Supported Backend Gems](#supported-backend-gems).
 
-This work was inspired by [multi_json](https://github.com/intridea/multi_json)
+This work is inspired by [multi_json](https://github.com/intridea/multi_json)
 and [multi_xml](https://github.com/sferik/multi_xml). The first version was
-written while I was visiting Japan in 2014 and is dedicated to all the
-rubyists I met there.
+written while I was visiting Japan in 2014 and is dedicated to the Rubyists
+of Asukusa.rb and John Mettreux.
 
 ## Installation
 
@@ -182,12 +182,33 @@ Planned for the future:
 
 ## Notes
 
-#### No `#close` method?
+#### No `#save` method?
 
-You'll notice that there is no `#close` method. All instance methods will open
-the archive, perform the operation and then close it. The archive is not
-opened or accessed until a method it called in the instance, and the archive
-is not kept open between method calls.
+You'll notice that there is no `#save` method. All changes are made to the archive when a given method if called. If there are errors writing to an archive, an
+exception is raised immediately.
+
+#### backend archive objects are not kept open between method calls
+
+The underlying archive object from a backend are not kept open open in memory
+unless they are currently being accessed.
+
+That means when you call a method like `#read_member` the archive is opened,
+the file is read and the archive is closed. If you do that method twice, that
+cycle happens two times.
+
+While this is inefficient and may be slow for large archives, the benefits are a simplified interface and helps normalize memory usage.
+
+This behaviour is likely to change in future versions; see the below section
+that talks about the `#close` method for more information.
+
+#### `#close` method is currently a non-op
+ 
+You'll notice that there is a `#close` method, but you may not no that is
+doesn't yet do anything since the underlying archive is not kept open between
+method calls.
+
+However, you should still use `#close` where appropriate since this
+behaviour is likely to change in the future.
 
 #### Support for other Rubies
 
@@ -197,37 +218,42 @@ However, In the future I plan on **trying** to support:
   * maglev
   * ironruby
   * macruby
-  * [kiji](https://github.com/twitter-forks/rubyenterpriseedition187-248)
 
-Currently I have travis-ci only testing on Linux. Adding macruby support also
-means testing on OS X. I would like to one-day test with MRI and Ironruby on
-Windows.
+The current travis-ci configuration only tests on Linux. Adding macruby
+support also means testing on OS X. I would like to one-day test with MRI, Ironruby and Jruby on Windows.
 
 MultiZip is written in pure ruby and so it should be able to run on any
 runtime that is compatible with MRI 1.8.7; however, the backend gems it uses
-may or may not work on every platform -- which is part of the reason I made
-this gem in the first place! One day I would like to support backend gems that
-are specific to Jruby/Java and Windows.
+may or may not work on every platform -- which is one of the reasons this
+gem exists in the first place! One day I would like to support backend gems
+that are specific to Jruby/Java and Windows.
   
 ## TODO
 
-Things that need to be done, in no particular order:
+Most important things, in order of importance:
 
+  * #add_member: add file to archive from filesystem (new method).
+  * Document exceptions raised, what they mean and how to use them.
   * Add inline docs for methods.
+  * support *nix zip(1L)/unzip(1L) without needing backend gem (with warning).
+
+Other things that need to be done, in no particular order:
+
   * Add support for more backends.
   * Support for backend gems to process other formats (gzip, bzip2, 7zip, tar, etc).
+  * Keep the backend archive open between method calls.
+  * Add soak tests for memory usage once archived are kept open.
+  * Ensure #close is executed when MultiZip instance goes out of scope.
   * Option to overwrite and existing archive instead of adding to it.
+  * #extract_member: extract file to path using original member name.
   * #write_member: support for reading from IO streams.
   * test with different majour versions of current supported backends.
   * Standardize Exception classes and when to raise them.
   * #read_*, #extract_* and #write_* methods should accept a block.
   * #extract_members: extract multiple files with one command (new method).
-  * #extract_member: extract file to path using original member name.
   * #write_member: add entire directory (recursively or not) to archive.
   * #write_members: add multiple files by wildcard (new method).
-  * #add_member: add file to archive from filesystem (new method).
   * #add_members: add multiple files to archive from filesystem (new method).
-  * #remove_member: remove a member file from the archive (new_method).
   * #remove_members: remove multiple member files from the archive (new_method).
   * #read_members: read multiple files wildcard.
   * #read_members: read multiple files via prefix as #list_members does.

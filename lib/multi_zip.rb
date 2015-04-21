@@ -71,6 +71,19 @@ class MultiZip
     available
   end
 
+  # Close the archive, if the archive is open.
+  # If the archive is already closed, behave as though it was open.
+  # Expected to always return true.
+  #
+  # This is currently a non-op since the archives are not kept open between
+  # method calls. It is here so users can write code using it to prepare for
+  # when we *do* keep the archives open.
+  #
+  # Currently, this method MUST NOT be overridden.
+  def close
+    return true
+  end
+
   # Intended to return the contents of a zip member as a string.
   #
   # This method MUST be overridden by a backend module.
@@ -97,19 +110,31 @@ class MultiZip
   end
 
   # List members of the zip file. Optionally can specify a prefix.
+  #
+  # This method MUST be overridden by a backend module.
   def list_members(prefix = nil, options={})
     raise NotImplementedError
   end
 
   # Boolean, does a given member path exist in the zip file?
+  #
   # This method MAY be overridden by backend module for the sake of
-  # efficiency, or will use results of #list_members.
+  # efficiency. Otherwise it will use #list_members.
   def member_exists?(member_path, options={})
     list_members(nil, options).include?(member_path)
   end
 
   # Write string contents to a zip member file
-  def write_member(member_path, member_content)
+  def write_member(member_path, member_content, options={})
+    raise NotImplementedError
+  end
+
+  # Remove a zip member from the archive.
+  # Expected to raise MemberNotFoundError if the member_path was not found in
+  # the archive
+  #
+  # This method MUST be overridden by a backend module.
+  def remove_member(member_path, options={})
     raise NotImplementedError
   end
 

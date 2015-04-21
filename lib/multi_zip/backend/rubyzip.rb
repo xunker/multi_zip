@@ -47,6 +47,13 @@ module MultiZip::Backend::Rubyzip
     destination_path
   end
 
+  def remove_member(member_path, options = {})
+    exists!(member_path)
+    Zip::File.open(@filename) do |zipfile|
+      zipfile.remove(member_path)
+    end
+  end
+
 private
 
   def read_operation(&blk)

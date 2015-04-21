@@ -49,6 +49,14 @@ module MultiZip::Backend::Zipruby
     destination_path
   end
 
+  def remove_member(member_path, options = {})
+    Zip::Archive.open(@filename) do |ar|
+      exists_in_archive!(ar, member_path)
+      ar.fdelete(ar.locate_name(member_path))
+    end
+    true
+  end
+
 private
   # NOTE: Zip::Archive#locate_name return values
   # -1 if path not found

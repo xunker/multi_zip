@@ -2,7 +2,7 @@ module MultiZip::Backend::ArchiveZip
   BUFFER_SIZE = 8192
 
   def read_member(member_path, options = {})
-    read_operation do |zip|
+    archive_operation do |zip|
       member = zip.find{|m| m.zip_path == member_path}
       if member && member.file?
         return member.file_data.read.to_s
@@ -14,7 +14,7 @@ module MultiZip::Backend::ArchiveZip
   end
 
   def list_members(prefix=nil, options={})
-    read_operation do |zip|
+    archive_operation do |zip|
       zip.entries.map(&:zip_path).select{|n|
         prefix ? n =~ /^#{prefix}/ : true
       }.sort
@@ -48,7 +48,7 @@ module MultiZip::Backend::ArchiveZip
   end
 
   def extract_member(member_path, destination_path, options = {}) 
-    read_operation do |zip|
+    archive_operation do |zip|
       member = zip.find{|m| m.zip_path == member_path}
       if member && member.file?
         output_file = ::File.new(destination_path, 'wb')
@@ -64,10 +64,23 @@ module MultiZip::Backend::ArchiveZip
     end
   end
 
+  def remove_member(member_path, options = {})
+    exists!(member_path)
+    archive_operation(:w) do |zip|
+      # I don't like mucking around with the guts like this, but recent
+      # versions of Archive::Zip have lost #remove_entry. The only other
+      # realistic option is to extract the entire archive to disk and then
+      # recreate without member_path; that may be worse...
+      warn 'Using non-public API to remove member using Archive::Zip'
+      zip.instance_eval { @entries.reject!{|m| m.zip_path == member_path} }
+    end
+    true
+  end
+
 private
 
-  def read_operation(&blk)
-    Archive::Zip.open(@filename) do |zip|
+  def archive_operation(mode = :r) # mode is either :r or :w
+    Archive::Zip.open(@filename, mode) do |zip|
       yield(zip)
     end
   rescue Archive::Zip::UnzipError => e

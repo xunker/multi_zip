@@ -1,6 +1,6 @@
 shared_examples 'zip backend' do |backend_name|
   let(:filename) { archive_fixture_filename }
-  let(:subject) { MultiZip.new(filename, :backend => backend_name) }
+  subject { MultiZip.new(filename, :backend => backend_name) }
 
   before do
     apply_constants(backend_name)
@@ -316,6 +316,64 @@ shared_examples 'zip backend' do |backend_name|
           it 'raises MemberNotAddedError'
           it 'does not add member to the archive'
           it 'does not remove preexisting members from the archive'
+        end
+      end
+
+      context 'archive not found' do
+        it 'raises ArchiveNotFoundError'
+      end
+
+      context 'archive is not a file' do
+        it 'raises ArchiveNotFoundError'
+      end
+
+      context 'archive cannot be accessed due to permissions' do
+        it 'raises ArchiveNotAccessibleError'
+      end
+
+      context 'invalid or unreadable archive' do
+        it 'raises ArchiveInvalidError'
+      end
+    end
+  end
+
+  describe '#remove_member' do
+    context "backend: #{backend_name}" do
+      subject { MultiZip.new(temp_filename, :backend => backend_name) }
+
+      let(:temp_filename) { "/tmp/multizip_test.zip" }
+      let(:member_file_name) { archive_member_files.first }
+
+      after do
+        FileUtils.rm(temp_filename) if File.exists?(temp_filename)
+      end
+
+      context 'archive exists' do
+        before do
+          FileUtils.cp(filename, temp_filename)
+          expect(
+            MultiZip.new(temp_filename).member_exists?(member_file_name)
+          ).to be_truthy
+        end
+        
+        let!(:result) do
+          subject.remove_member(member_file_name)
+        end
+
+        context 'member removed successfully' do
+          it 'returns true' do
+            expect(result).to be_truthy
+          end
+          it 'removes the member to the file' do
+            expect(
+              MultiZip.new(temp_filename).member_exists?(member_file_name)
+            ).to be_falsey
+          end
+        end
+
+        context 'member not successfully added' do
+          it 'raises MemberNotRemovedError'
+          it 'does not remove member from the archive'
         end
       end
 
