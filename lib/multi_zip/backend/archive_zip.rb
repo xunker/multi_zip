@@ -65,7 +65,13 @@ module MultiZip::Backend::ArchiveZip
   end
 
   def remove_member(member_path, options = {})
-    exists!(member_path)
+    remove_members([member_path], options)
+  end
+
+  def remove_members(member_paths, options = {})
+    member_paths.each do |member_path|
+      exists!(member_path)
+    end
     
     # archive-zip doesn't have the #remove_entry method any more, so we do
     # this in a really slow way: we dump the entire dir to the filesystem,
@@ -73,7 +79,10 @@ module MultiZip::Backend::ArchiveZip
     
     Dir.mktmpdir do |tmp_dir|
       Archive::Zip.extract(@filename, tmp_dir)
-      FileUtils.rm("#{tmp_dir}/#{member_path}")
+
+      member_paths.each do |member_path|
+        FileUtils.rm("#{tmp_dir}/#{member_path}")
+      end
       
       tempfile = Tempfile.new(['multizip_temp', '.zip'])
       tempfile_path = tempfile.path
