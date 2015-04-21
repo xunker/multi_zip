@@ -88,8 +88,8 @@ module MultiZip::Backend::ArchiveZip
       tempfile_path = tempfile.path
       tempfile.delete
 
-      Archive::Zip.archive(tempfile_path, "#{tmp_dir}/.") # here's to hoping...
-      FileUtils.mv(tempfile_path, @filename) # scary!
+      Archive::Zip.archive(tempfile_path, "#{tmp_dir}/.")
+      FileUtils.mv(tempfile_path, @filename)
     end
 
     true
