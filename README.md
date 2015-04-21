@@ -120,10 +120,10 @@ file = zip.read_member('/path/inside/archive/to/file.txt')
 #### Read multiple files from zip archive
 
 ```ruby
-files = zip.read_members(
+files = zip.read_members([
   '/path/inside/archive/to/file_1.txt',
   '/path/inside/archive/to/file_2.txt'
-)
+])
 # => ["File one content.", "File two content."]
 ```
 
@@ -148,6 +148,16 @@ zip.write_member('/path/inside/archive/to/file.txt', 'File one content.')
 
 ```ruby
 file = zip.remove_member('/path/inside/archive/to/file.txt')
+# => true
+```
+
+#### Remove multiple files from a zip archive
+
+```ruby
+file = zip.remove_members([
+  '/path/inside/archive/to/file_1.txt',
+  '/path/inside/archive/to/file_2.txt'
+])
 # => true
 ```
 
