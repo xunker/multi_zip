@@ -202,7 +202,7 @@ that talks about the `#close` method for more information.
 
 #### `#close` method is currently a non-op
  
-You'll notice that there is a `#close` method, but you may not no that is
+You'll notice that there is a `#close` method, but you may not know that it
 doesn't yet do anything since the underlying archive is not kept open between
 method calls.
 
