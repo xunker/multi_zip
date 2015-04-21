@@ -98,6 +98,18 @@ For all the examples below, assume this:
 zip = MultiZip.new('/path/to/archive.zip')
 ```
 
+#### List files in a zip archive
+
+Response array of file names within the archive.
+
+```ruby
+zip.list_members
+# => [
+#  '/path/inside/archive/to/file_1.txt',
+#  '/path/inside/archive/to/file_2.txt'
+# ]
+```
+
 #### Read file from zip archive
 
 ```ruby
@@ -105,20 +117,15 @@ file = zip.read_member('/path/inside/archive/to/file.txt')
 # => "This is the content of the file from the archive."
 ```
 
-Will raise `MultiZip::MemberNotFoundError` if the file can't be found.
-
 #### Read multiple files from zip archive
 
 ```ruby
-files = zip.read_member(
+files = zip.read_members(
   '/path/inside/archive/to/file_1.txt',
   '/path/inside/archive/to/file_2.txt'
 )
 # => ["File one content.", "File two content."]
 ```
-
-Will raise `MultiZip::MemberNotFoundError` if one or more of the files can't
-be found.
 
 #### Extract file from zip archive to filesystem path
 
@@ -130,8 +137,6 @@ file = zip.extract_member(
 # => 'path/on/local/filesystem/file.txt'
 ```
 
-Will raise `MultiZip::MemberNotFoundError` if the file can't be found.
-
 #### Write file to zip archive from string
 
 ```ruby
@@ -139,16 +144,11 @@ zip.write_member('/path/inside/archive/to/file.txt', 'File one content.')
 # => true
 ```
 
-#### List files in a zip archive
-
-Response array of file names within the archive.
+#### Remove a file from a zip archive
 
 ```ruby
-zip.list_members
-# => [
-#  '/path/inside/archive/to/file_1.txt',
-#  '/path/inside/archive/to/file_2.txt'
-# ]
+file = zip.remove_member('/path/inside/archive/to/file.txt')
+# => true
 ```
 
 #### Creating a new instance and passing a block 
@@ -184,19 +184,18 @@ Planned for the future:
 
 #### No `#save` method?
 
-You'll notice that there is no `#save` method. All changes are made to the archive when a given method if called. If there are errors writing to an archive, an
-exception is raised immediately.
+You'll notice that there is no `#save` method. All changes are made to the
+archive immediately when the given method is called. If there are errors
+writing to an archive, an exception is raised immediately.
 
-#### backend archive objects are not kept open between method calls
+#### Archive objects are not kept open between method calls
 
-The underlying archive object from a backend are not kept open open in memory
-unless they are currently being accessed.
+The underlying archive object from the backend gem is not kept open open in
+memory. That means when you call a method like `#read_member` the archive is
+opened, the file is read and the archive is closed. If you do that method
+twice, that cycle happens two times.
 
-That means when you call a method like `#read_member` the archive is opened,
-the file is read and the archive is closed. If you do that method twice, that
-cycle happens two times.
-
-While this is inefficient and may be slow for large archives, the benefits are a simplified interface and helps normalize memory usage.
+While this *is* inefficient and *may* be slow for large archives, the benefits are a simplified interface and normalized memory usage.
 
 This behaviour is likely to change in future versions; see the below section
 that talks about the `#close` method for more information.
