@@ -151,9 +151,10 @@ class MultiZip
 private
 
   # Convenience method that will raise ArchiveNotFoundError if the archive
-  # doesn't exist.
+  # doesn't exist or if the archive path given points to something other than
+  # a file.
   def archive_exists!
-    unless File.exists?(@filename)
+    unless File.file?(@filename)
       raise ArchiveNotFoundError.new(@filename)
     end
   end
