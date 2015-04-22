@@ -6,6 +6,7 @@ gemspec
 if RUBY_VERSION.to_f >= 2.0 && RUBY_ENGINE == 'ruby'
   gem 'pry', :require => false
   gem 'pry-byebug', :require => false
+  gem 'guard-rspec', :require => false
 end
 
 # rubyzip requires ruby >= 1.9.2
@@ -16,5 +17,3 @@ end
 
 gem 'zipruby', '0.3.6', :require => nil, :platforms => :ruby
 gem 'archive-zip', '~> 0.7.0', :require => nil
-
-gem 'guard-rspec'

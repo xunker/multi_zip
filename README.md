@@ -13,12 +13,12 @@ MultiZip provides a very small and focused set of functions:
 
  * Create a new zip archive or open existing one.
  * Add files to a archive from using content from a variable.
- * Add a local file to an archive. (Pending TODO).
  * Read files from a archive in to a variable.
  * Extract files from an archive to a local file.
  * List files contained in an archive.
+ * Delete files from an archive.
  * Get information for a file in an archive. (Pending TODO)
- * Delete files from an archive. (Pending TODO)
+ * Add a local file to an archive. (Pending TODO).
 
 It is meant for most common zip/unzip tasks. For anything more
 complicated than these basics, you should use a specific (un)zipping library
