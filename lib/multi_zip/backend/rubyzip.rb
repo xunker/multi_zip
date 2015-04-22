@@ -48,6 +48,7 @@ module MultiZip::Backend::Rubyzip
   end
 
   def remove_member(member_path, options = {})
+    archive_exists!
     exists!(member_path)
     Zip::File.open(@filename) do |zipfile|
       zipfile.remove(member_path)
@@ -57,6 +58,7 @@ module MultiZip::Backend::Rubyzip
 private
 
   def read_operation(&blk)
+    archive_exists!
     Zip::File.open(@filename) do |zip_file|
       yield(zip_file)
     end

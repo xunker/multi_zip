@@ -31,7 +31,7 @@ shared_examples 'zip backend' do |backend_name|
       end
 
       context 'archive not found' do
-        it 'raises ArchiveNotFoundError'
+        it_behaves_like 'raises ArchiveNotFoundError', :read_member, archive_member_files.first
       end
 
       context 'archive is not a file' do
@@ -71,7 +71,7 @@ shared_examples 'zip backend' do |backend_name|
       end
 
       context 'archive not found' do
-        it 'raises ArchiveNotFoundError'
+        it_behaves_like 'raises ArchiveNotFoundError', :read_members, archive_member_files
       end
 
       context 'archive is not a file' do
@@ -122,7 +122,7 @@ shared_examples 'zip backend' do |backend_name|
       end
 
       context 'archive not found' do
-        it 'raises ArchiveNotFoundError'
+        it_behaves_like 'raises ArchiveNotFoundError', :extract_member, archive_member_files.first, 'destination'
       end
 
       context 'archive is not a file' do
@@ -173,7 +173,7 @@ shared_examples 'zip backend' do |backend_name|
       end
 
       context 'archive not found' do
-        it 'raises ArchiveNotFoundError'
+        it_behaves_like 'raises ArchiveNotFoundError', :list_members
       end
 
       context 'archive is not a file' do
@@ -209,7 +209,7 @@ shared_examples 'zip backend' do |backend_name|
       end
 
       context 'archive not found' do
-        it 'raises ArchiveNotFoundError'
+        it_behaves_like 'raises ArchiveNotFoundError', :member_exists?, archive_member_files.first
       end
 
       context 'archive is not a file' do
@@ -319,10 +319,6 @@ shared_examples 'zip backend' do |backend_name|
         end
       end
 
-      context 'archive not found' do
-        it 'raises ArchiveNotFoundError'
-      end
-
       context 'archive is not a file' do
         it 'raises ArchiveNotFoundError'
       end
@@ -384,7 +380,7 @@ shared_examples 'zip backend' do |backend_name|
       end
 
       context 'archive not found' do
-        it 'raises ArchiveNotFoundError'
+        it_behaves_like 'raises ArchiveNotFoundError', :remove_member, archive_member_files.first
       end
 
       context 'archive is not a file' do
@@ -452,7 +448,7 @@ shared_examples 'zip backend' do |backend_name|
       end
 
       context 'archive not found' do
-        it 'raises ArchiveNotFoundError'
+        it_behaves_like 'raises ArchiveNotFoundError', :remove_members, archive_member_files
       end
 
       context 'archive is not a file' do
@@ -480,5 +476,12 @@ shared_examples 'raises InvalidArchiveError' do |*args|
   let(:filename) { invalid_archive_fixture_filename }
   it 'raises InvalidArchiveError' do
     expect(lambda{ subject.send(args.shift, *args) }).to raise_error(MultiZip::InvalidArchiveError)
+  end
+end
+
+shared_examples 'raises ArchiveNotFoundError' do |*args|
+  let(:filename) { 'doesnt_exist' }  
+  it 'raises ArchiveNotFoundError' do
+    expect(lambda{ subject.send(args.shift, *args) }).to raise_error(MultiZip::ArchiveNotFoundError)
   end
 end

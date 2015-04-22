@@ -150,6 +150,14 @@ class MultiZip
 
 private
 
+  # Convenience method that will raise ArchiveNotFoundError if the archive
+  # doesn't exist.
+  def archive_exists!
+    unless File.exists?(@filename)
+      raise ArchiveNotFoundError.new(@filename)
+    end
+  end
+
   # Convenience method that will raise MemberNotFoundError if the member doesn't exist.
   # Uses #member_exists? in whatever form (default or custom).
   def exists!(member_path)

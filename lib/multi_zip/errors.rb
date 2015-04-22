@@ -5,7 +5,7 @@ class MultiZip
 
   class ArchiveError < BaseError
     attr_reader :archive_filename, :original_exception
-    def initialize(archive_filename, original_exception)
+    def initialize(archive_filename, original_exception=nil)
       @archive_filename = archive_filename
       @original_exception = original_exception
     end
@@ -15,6 +15,11 @@ class MultiZip
   end
 
   class InvalidArchiveError < ArchiveError; end
+  class ArchiveNotFoundError < ArchiveError
+    def message
+      "Archive \"#{@archive_filename}\" not found"
+    end
+  end
 
   class MemberError < BaseError
     attr_reader :member_path

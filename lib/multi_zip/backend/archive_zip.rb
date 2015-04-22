@@ -69,6 +69,7 @@ module MultiZip::Backend::ArchiveZip
   end
 
   def remove_members(member_paths, options = {})
+    archive_exists!
     member_paths.each do |member_path|
       exists!(member_path)
     end
@@ -98,6 +99,7 @@ module MultiZip::Backend::ArchiveZip
 private
 
   def archive_operation(mode = :r) # mode is either :r or :w
+    archive_exists!
     Archive::Zip.open(@filename, mode) do |zip|
       yield(zip)
     end
