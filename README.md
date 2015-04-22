@@ -34,7 +34,7 @@ For information about which backend gems work in which ruby, see [Supported Back
 This work is inspired by [multi_json](https://github.com/intridea/multi_json)
 and [multi_xml](https://github.com/sferik/multi_xml). The first version was
 written while I was visiting Japan in 2014 and is dedicated to the Rubyists
-of Asukusa.rb and John Mettreux.
+of [Asukusa.rb](https://asakusarb.doorkeeper.jp/), [John Mettraux](https://twitter.com/jmettraux) and all the good people I met there.
 
 ## Installation
 
