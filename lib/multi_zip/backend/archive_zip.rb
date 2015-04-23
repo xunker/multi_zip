@@ -85,8 +85,10 @@ module MultiZip::Backend::ArchiveZip
         FileUtils.rm("#{tmp_dir}/#{member_path}")
       end
       
+      # create a tempfile and immediately delete it, we just want the name.
       tempfile = Tempfile.new(['multizip_temp', '.zip'])
       tempfile_path = tempfile.path
+      tempfile.close
       tempfile.delete
 
       Archive::Zip.archive(tempfile_path, "#{tmp_dir}/.")
