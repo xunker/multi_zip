@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Matthew Nielsen"]
   spec.email         = ["xunker@pyxidis.org"]
   spec.summary       = %q{Abstracts zipping and unzipping using whatever gems are installed, automatically.}
-  spec.description   = %q{Abstracts zipping and unzipping using whatever gems are installed using one consistent API. Provides swappable zipping/unzipping backends so you're not tied to just one gem. Support rubyzip, archive-zip, zipruby and others.}
+  spec.description   = %q{Abstracts zipping and unzipping using whatever gems are installed using one consistent API. Provides swappable zipping/unzipping backends so you're not tied to just one gem. Supports rubyzip, archive-zip, zipruby and others.}
   spec.homepage      = "https://github.com/xunker/multi_zip"
   spec.license       = "MIT"
 
