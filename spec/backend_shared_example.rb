@@ -30,9 +30,7 @@ shared_examples 'zip backend' do |backend_name|
         it_behaves_like 'raises MemberNotFoundError', :read_member, archive_member_directories.first
       end
 
-      context 'archive not found' do
-        it_behaves_like 'raises ArchiveNotFoundError', :read_member, archive_member_files.first
-      end
+      it_behaves_like 'archive not found, raises ArchiveNotFoundError', :read_member, archive_member_files.first
 
       context 'archive is not a file' do
         it 'raises ArchiveNotFoundError'
@@ -70,10 +68,8 @@ shared_examples 'zip backend' do |backend_name|
           [ archive_member_files.first, 'doesnt_exist' ]
       end
 
-      context 'archive not found' do
-        it_behaves_like 'raises ArchiveNotFoundError', :read_members, archive_member_files
-      end
-
+      it_behaves_like 'archive not found, raises ArchiveNotFoundError', :read_members, archive_member_files
+      
       context 'archive is not a file' do
         it 'raises ArchiveNotFoundError'
       end
@@ -121,10 +117,8 @@ shared_examples 'zip backend' do |backend_name|
         end
       end
 
-      context 'archive not found' do
-        it_behaves_like 'raises ArchiveNotFoundError', :extract_member, archive_member_files.first, 'destination'
-      end
-
+      it_behaves_like 'archive not found, raises ArchiveNotFoundError', :extract_member, archive_member_files.first, 'destination'
+      
       context 'archive is not a file' do
         it 'raises ArchiveNotFoundError'
       end
@@ -172,10 +166,8 @@ shared_examples 'zip backend' do |backend_name|
         it 'returns empty array'
       end
 
-      context 'archive not found' do
-        it_behaves_like 'raises ArchiveNotFoundError', :list_members
-      end
-
+      it_behaves_like 'archive not found, raises ArchiveNotFoundError', :list_members
+      
       context 'archive is not a file' do
         it 'raises ArchiveNotFoundError'
       end
@@ -208,10 +200,8 @@ shared_examples 'zip backend' do |backend_name|
         expect(subject.member_exists?('does_not_exist')).to be_falsey
       end
 
-      context 'archive not found' do
-        it_behaves_like 'raises ArchiveNotFoundError', :member_exists?, archive_member_files.first
-      end
-
+      it_behaves_like 'archive not found, raises ArchiveNotFoundError', :member_exists?, archive_member_files.first
+      
       context 'archive is not a file' do
         it 'raises ArchiveNotFoundError'
       end
@@ -379,10 +369,8 @@ shared_examples 'zip backend' do |backend_name|
         end
       end
 
-      context 'archive not found' do
-        it_behaves_like 'raises ArchiveNotFoundError', :remove_member, archive_member_files.first
-      end
-
+      it_behaves_like 'archive not found, raises ArchiveNotFoundError', :remove_member, archive_member_files.first
+      
       context 'archive is not a file' do
         it 'raises ArchiveNotFoundError'
       end
@@ -447,10 +435,8 @@ shared_examples 'zip backend' do |backend_name|
         end
       end
 
-      context 'archive not found' do
-        it_behaves_like 'raises ArchiveNotFoundError', :remove_members, archive_member_files
-      end
-
+      it_behaves_like 'archive not found, raises ArchiveNotFoundError', :remove_members, archive_member_files
+      
       context 'archive is not a file' do
         it 'raises ArchiveNotFoundError'
       end
@@ -480,8 +466,14 @@ shared_examples 'raises InvalidArchiveError' do |*args|
 end
 
 shared_examples 'raises ArchiveNotFoundError' do |*args|
-  let(:filename) { 'doesnt_exist' }  
   it 'raises ArchiveNotFoundError' do
     expect(lambda{ subject.send(args.shift, *args) }).to raise_error(MultiZip::ArchiveNotFoundError)
+  end
+end
+
+shared_examples 'archive not found, raises ArchiveNotFoundError' do |*args|
+  context 'archive not found' do
+    let(:filename) { 'doesnt_exist' }  
+    it_behaves_like 'raises ArchiveNotFoundError', *args
   end
 end
