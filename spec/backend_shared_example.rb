@@ -1,15 +1,15 @@
 shared_examples 'zip backend' do |backend_name|
-  let(:filename) { archive_fixture_filename }
-  subject { MultiZip.new(filename, :backend => backend_name) }
+  context "backend: #{backend_name}" do
+    let(:filename) { archive_fixture_filename }
+    subject { MultiZip.new(filename, :backend => backend_name) }
 
-  before do
-    apply_constants(backend_name)
-    # subject.backend = backend_name
-  end
-  after { stash_constants(backend_name) }
+    before do
+      apply_constants(backend_name)
+      # subject.backend = backend_name
+    end
+    after { stash_constants(backend_name) }
 
-  describe '#read_member' do
-    context "backend: #{backend_name}" do
+    describe '#read_member' do
       context 'member found' do
         archive_member_files.each do |member_file|
           it "returns '#{member_file}' as a string" do
@@ -44,10 +44,8 @@ shared_examples 'zip backend' do |backend_name|
         it_behaves_like 'raises InvalidArchiveError', :read_member, archive_member_files.first
       end
     end
-  end
 
-  describe '#read_members' do
-    context "backend: #{backend_name}" do
+    describe '#read_members' do
       context 'all members found' do
         it 'returns the member content as an array a string in order of args' do
           extracted_files = subject.read_members(archive_member_files)
@@ -83,10 +81,8 @@ shared_examples 'zip backend' do |backend_name|
           [ archive_member_files.first, archive_member_directories.first ]
       end
     end
-  end
 
-  describe '#extract_member' do
-    context "backend: #{backend_name}" do
+    describe '#extract_member' do
       let(:tempfile) { Tempfile.new('multi_zip_test') }
 
       context 'member found' do
@@ -136,10 +132,8 @@ shared_examples 'zip backend' do |backend_name|
         end
       end
     end
-  end
 
-  describe '#list_members' do
-    context "backend: #{backend_name}" do
+    describe '#list_members' do
       context 'file contains members' do
         it 'returns array member file names' do
           expect(subject.list_members).to eq(archive_member_names)
@@ -180,10 +174,8 @@ shared_examples 'zip backend' do |backend_name|
         it_behaves_like 'raises InvalidArchiveError', :list_members
       end
     end
-  end
 
-  describe '#member_exists?' do
-    context "backend: #{backend_name}" do
+    describe '#member_exists?' do
       context 'member is a file' do
         it 'returns true if member exists' do
           expect(subject.member_exists?(archive_member_files.first)).to be_truthy
@@ -214,10 +206,8 @@ shared_examples 'zip backend' do |backend_name|
         it_behaves_like 'raises InvalidArchiveError', :member_exists?, archive_member_files.first
       end
     end
-  end
 
-  describe '#write_member' do
-    context "backend: #{backend_name}" do
+    describe '#write_member' do
       after { FileUtils.rm(filename) if File.exists?(filename) }
 
       let(:filename) { "/tmp/multizip_test.zip" }
@@ -321,10 +311,8 @@ shared_examples 'zip backend' do |backend_name|
         it 'raises ArchiveInvalidError'
       end
     end
-  end
 
-  describe '#remove_member' do
-    context "backend: #{backend_name}" do
+    describe '#remove_member' do
       subject { MultiZip.new(temp_filename, :backend => backend_name) }
 
       let(:temp_filename) { "/tmp/multizip_test.zip" }
@@ -382,11 +370,9 @@ shared_examples 'zip backend' do |backend_name|
       context 'invalid or unreadable archive' do
         it 'raises ArchiveInvalidError'
       end
-    end
-  end  
+    end  
 
-  describe '#remove_members' do
-    context "backend: #{backend_name}" do
+    describe '#remove_members' do
       subject { MultiZip.new(temp_filename, :backend => backend_name) }
 
       let(:temp_filename) { "/tmp/multizip_test.zip" }
@@ -448,8 +434,8 @@ shared_examples 'zip backend' do |backend_name|
       context 'invalid or unreadable archive' do
         it 'raises ArchiveInvalidError'
       end
-    end
-  end  
+    end  
+  end
 end
 
 shared_examples 'raises MemberNotFoundError' do |*args|
