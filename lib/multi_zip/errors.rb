@@ -1,13 +1,5 @@
 class MultiZip
   class BaseError < RuntimeError; end
-
-  class UnknownError < BaseError
-    attr_reader :archive_filename, :message
-    def initialize(archive_filename, message)
-      @archive_filename = archive_filename
-      @message = message
-    end
-  end
   
   class NoSupportedBackendError < BaseError; end
 
@@ -21,6 +13,8 @@ class MultiZip
       "Archive \"#{@archive_filename}\" error: #{@original_exception.message}"
     end
   end
+
+  class UnknownError < ArchiveError; end
 
   class InvalidArchiveError < ArchiveError; end
   class ArchiveNotFoundError < ArchiveError

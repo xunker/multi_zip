@@ -3,6 +3,6 @@ require 'backend_shared_example'
 
 RSpec.describe MultiZip do
   if test_with_zipruby?
-    # it_behaves_like 'zip backend', 'zipruby'
+    it_behaves_like 'zip backend', 'zipruby'
   end
 end

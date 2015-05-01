@@ -15,6 +15,7 @@ module MultiZip::Backend::Cli
     UNZIP_PROGRAM_SIGNATURE = /UnZip [5-6]\.\d+ of .+, by Info-ZIP/
     UNZIP_PROGRAM_SIGNATURE_SWITCH = '-v'
     UNZIP_PROGRAM_LIST_MEMBERS_SWITCHES = ['-Z', '-1']
+    UNZIP_PROGRAM_READ_MEMBER_SWITCH = '-p'
 
     def self.require_name
       'info_zip'
@@ -137,6 +138,7 @@ module MultiZip::Backend::Cli
 
     module InstanceMethods
       def list_members(prefix = nil, options={})
+        archive_exists!
         response = MultiZip::Backend::Cli::InfoZip.spawn([
           UNZIP_PROGRAM, UNZIP_PROGRAM_LIST_MEMBERS_SWITCHES, @filename
         ].flatten)
@@ -146,15 +148,51 @@ module MultiZip::Backend::Cli
           member_list.select!{|m| m =~ /^#{prefix}/} if prefix
           return member_list
         else # error, response.last should contain error message
-          error_class = MultiZip::Backend::Cli::InfoZip::ResponseError.new(response.last)
-          case response.last
-          when /End-of-central-directory signature not found/
-            raise MultiZip::InvalidArchiveError.new(@filename, error_class)
-          when /cannot find or open/
-            raise MultiZip::ArchiveNotFoundError.new(@filename, error_class)
-          else
-            raise MultiZip::UnknownError.new(@filename, response.last)
-          end
+          raise_info_zip_error!(response.last)
+        end
+      end
+
+      def read_member(member_path, options={})
+        archive_exists!
+        member_not_found!(member_path) if member_path =~ /\/$/
+        response = MultiZip::Backend::Cli::InfoZip.spawn([
+          UNZIP_PROGRAM, UNZIP_PROGRAM_READ_MEMBER_SWITCH, @filename, member_path
+        ].flatten)
+
+        return response.first if response.first
+          
+        raise_info_zip_error!(response.last, :member_path => member_path)
+      end
+
+      def write_member(member_path, member_content, options={})
+        Dir.mktmpdir do |tempdir|
+          member_file = File.new("#{tempdir}/#{member_path}", 'wb')
+          member_file.print member_content
+          member_file.close
+
+          cwd = Dir.pwd
+          Dir.chdir(tempdir)
+
+          response = MultiZip::Backend::Cli::InfoZip.spawn([
+            ZIP_PROGRAM, @filename, member_path
+          ])
+          
+          Dir.chdir(cwd)
+        end
+        true
+      end
+
+      def raise_info_zip_error!(message, options={})
+        infozip_error = MultiZip::Backend::Cli::InfoZip::ResponseError.new(message)
+        case message
+        when /End-of-central-directory signature not found/
+          raise MultiZip::InvalidArchiveError.new(@filename, infozip_error)
+        when /cannot find or open/
+          raise MultiZip::ArchiveNotFoundError.new(@filename, infozip_error)
+        when /filename not matched/
+          raise MultiZip::MemberNotFoundError.new(options[:member_path])
+        else
+          raise MultiZip::UnknownError.new(@filename, infozip_error)
         end
       end
     end
