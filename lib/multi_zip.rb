@@ -29,7 +29,7 @@ class MultiZip
       :fingerprints => [
         [true, lambda { MultiZip::Backend::Cli.strategy_available? } ]
       ],
-      :constant => lambda { MultiZip::Backend::Cli }
+      :constant => lambda { MultiZip::Backend::Cli.strategy.extend_class.call }
     }
   }
 

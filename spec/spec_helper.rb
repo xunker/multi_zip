@@ -82,11 +82,20 @@ rescue Gem::LoadError
   false
 end
 
+def test_with_archive_zip?
+  true
+end
+
+def test_with_cli?
+  true
+end
+
 def backends_to_test
   @backends_to_test ||= [
     (test_with_zipruby? ? :zipruby : nil),
     (test_with_rubyzip? ? :rubyzip : nil),
-    :archive_zip
+    (test_with_archive_zip? ? :archive_zip : nil),
+    (test_with_cli? ? :cli : nil),
   ].compact
 end
 
@@ -97,8 +106,8 @@ if excluded_backends.length > 0
   warn "*** Backends that will not be tested: #{excluded_backends.map(&:to_s).join(', ')} ***"
 end
 
-BACKEND_CONSTANTS = {}
-BACKEND_CLASSES = {}
+BACKEND_CONSTANTS = Hash.new([])
+BACKEND_CLASSES = Hash.new([])
 
 def set_backend_class(lib, klass)
   BACKEND_CONSTANTS[lib.to_sym] = klass.constants

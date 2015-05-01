@@ -133,7 +133,7 @@ shared_examples 'zip backend' do |backend_name|
       end
     end
 
-    describe '#list_members' do
+    describe '#list_members', focus: true do
       context 'file contains members' do
         it 'returns array member file names' do
           expect(subject.list_members).to eq(archive_member_names)

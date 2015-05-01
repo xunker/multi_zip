@@ -22,7 +22,7 @@
 #
 # First, check for the programs that would be installed by default.
 # If none can be found, raise an error and tell the user how they can resolve
-# the problem: Either tell them to install a different backend gem (prefered)
+# the problem: Either tell them to install a different backend gem (preferred)
 # or tell them how to install a supported CLI program (depending on OS).
 #
 # When using this shell method, always emit a warning that it is very
@@ -30,16 +30,20 @@
 # production environments.
 
 module MultiZip::Backend::Cli
+  STRATEGY_MODULES = [
+    [ :info_zip, lambda { InfoZip }]
+  ]
+
   def self.extended(mod)
-    if strategy = strategy
-      require "multi_zip/backend/shell/#{strategy.require_name}"
-      extend strategy.extend_name
+    if strategy_available?
+      require "multi_zip/backend/cli/#{strategy.require_name}"
+      extend strategy.extend_class.call
       warn([
         "MultiZip is using the \"#{strategy.human_name}\" command-line program.",
         "This is very inefficient and should not be used in production environments."
-      ].join(' '))
+      ].join("\n"))
     else
-      raise NoSupportedBackendError, "MultiZip::Backend::Cli could find no suitable zipping/unzipping programs in path."
+      raise MultiZip::NoSupportedBackendError, "MultiZip::Backend::Cli could find no suitable zipping/unzipping programs in path."
     end
   end
 
@@ -52,6 +56,12 @@ module MultiZip::Backend::Cli
   end
 
   def self.detect_strategy
-    nil # xxx
+    STRATEGY_MODULES.detect{|strategy_module_file, strategy_module_constant|
+      require "multi_zip/backend/cli/#{strategy_module_file}"
+      strategy_module = strategy_module_constant.call
+      if strategy_module.available?
+        return strategy_module
+      end
+    }
   end
 end
