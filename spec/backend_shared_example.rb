@@ -32,9 +32,7 @@ shared_examples 'zip backend' do |backend_name|
 
       it_behaves_like 'archive not found, raises ArchiveNotFoundError', :read_member, archive_member_files.first
 
-      context 'archive is not a file' do
-        it 'raises ArchiveNotFoundError'
-      end
+      it_behaves_like 'archive is not a file, raises ArchiveNotFoundError', :read_member, archive_member_files.first
 
       context 'archive cannot be accessed due to permissions' do
         it 'raises ArchiveNotAccessibleError'
@@ -67,10 +65,8 @@ shared_examples 'zip backend' do |backend_name|
       end
 
       it_behaves_like 'archive not found, raises ArchiveNotFoundError', :read_members, archive_member_files
-      
-      context 'archive is not a file' do
-        it 'raises ArchiveNotFoundError'
-      end
+
+      it_behaves_like 'archive is not a file, raises ArchiveNotFoundError', :read_members, archive_member_files
 
       context 'archive cannot be accessed due to permissions' do
         it 'raises ArchiveNotAccessibleError'
@@ -114,10 +110,8 @@ shared_examples 'zip backend' do |backend_name|
       end
 
       it_behaves_like 'archive not found, raises ArchiveNotFoundError', :extract_member, archive_member_files.first, 'destination'
-      
-      context 'archive is not a file' do
-        it 'raises ArchiveNotFoundError'
-      end
+
+      it_behaves_like 'archive is not a file, raises ArchiveNotFoundError', :extract_member, archive_member_files.first, 'destination'
 
       context 'archive cannot be accessed due to permissions' do
         it 'raises ArchiveNotAccessibleError'
@@ -161,10 +155,8 @@ shared_examples 'zip backend' do |backend_name|
       end
 
       it_behaves_like 'archive not found, raises ArchiveNotFoundError', :list_members
-      
-      context 'archive is not a file' do
-        it 'raises ArchiveNotFoundError'
-      end
+
+      it_behaves_like 'archive is not a file, raises ArchiveNotFoundError', :list_members
 
       context 'archive cannot be accessed due to permissions' do
         it 'raises ArchiveNotAccessibleError'
@@ -193,10 +185,8 @@ shared_examples 'zip backend' do |backend_name|
       end
 
       it_behaves_like 'archive not found, raises ArchiveNotFoundError', :member_exists?, archive_member_files.first
-      
-      context 'archive is not a file' do
-        it 'raises ArchiveNotFoundError'
-      end
+
+      it_behaves_like 'archive is not a file, raises ArchiveNotFoundError', :member_exists?, archive_member_files.first
 
       context 'archive cannot be accessed due to permissions' do
         it 'raises ArchiveNotAccessibleError'
@@ -216,7 +206,7 @@ shared_examples 'zip backend' do |backend_name|
 
       context 'archive did not exist' do
         before { expect(File.exists?(filename)).to be_falsey }
-        
+
         let!(:result) do
           subject.write_member(member_file_name, member_file_contents)
         end
@@ -329,7 +319,7 @@ shared_examples 'zip backend' do |backend_name|
             MultiZip.new(temp_filename).member_exists?(member_file_name)
           ).to be_truthy
         end
-        
+
         let!(:result) do
           subject.remove_member(member_file_name)
         end
@@ -358,7 +348,7 @@ shared_examples 'zip backend' do |backend_name|
       end
 
       it_behaves_like 'archive not found, raises ArchiveNotFoundError', :remove_member, archive_member_files.first
-      
+
       context 'archive is not a file' do
         it 'raises ArchiveNotFoundError'
       end
@@ -370,7 +360,7 @@ shared_examples 'zip backend' do |backend_name|
       context 'invalid or unreadable archive' do
         it 'raises ArchiveInvalidError'
       end
-    end  
+    end
 
     describe '#remove_members' do
       subject { MultiZip.new(temp_filename, :backend => backend_name) }
@@ -391,7 +381,7 @@ shared_examples 'zip backend' do |backend_name|
             ).to be_truthy
           end
         end
-        
+
         let!(:result) do
           subject.remove_members(member_file_names)
         end
@@ -422,7 +412,7 @@ shared_examples 'zip backend' do |backend_name|
       end
 
       it_behaves_like 'archive not found, raises ArchiveNotFoundError', :remove_members, archive_member_files
-      
+
       context 'archive is not a file' do
         it 'raises ArchiveNotFoundError'
       end
@@ -434,7 +424,7 @@ shared_examples 'zip backend' do |backend_name|
       context 'invalid or unreadable archive' do
         it 'raises ArchiveInvalidError'
       end
-    end  
+    end
   end
 end
 
@@ -459,7 +449,15 @@ end
 
 shared_examples 'archive not found, raises ArchiveNotFoundError' do |*args|
   context 'archive not found' do
-    let(:filename) { 'doesnt_exist' }  
+    let(:filename) { 'doesnt_exist' }
     it_behaves_like 'raises ArchiveNotFoundError', *args
   end
 end
+
+shared_examples 'archive is not a file, raises ArchiveNotFoundError' do |*args|
+  context 'archive is not a file' do
+    let(:filename) { not_an_archive_fixture_filename }
+    it_behaves_like 'raises ArchiveNotFoundError', *args
+  end
+end
+

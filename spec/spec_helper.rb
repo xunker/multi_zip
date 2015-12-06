@@ -37,6 +37,10 @@ def archive_fixture_filename
   'spec/fixtures/test.zip'
 end
 
+def not_an_archive_fixture_filename
+  'spec/fixtures/test'
+end
+
 def archive_members
   # assumed to reflect files in spec/fixtures/test/zip
   {
@@ -72,7 +76,7 @@ def test_with_rubyzip?
   end
   false
 rescue Gem::LoadError
-  false  
+  false
 end
 
 def test_with_zipruby?
