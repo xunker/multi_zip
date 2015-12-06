@@ -29,16 +29,24 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 end
 
+def fixture_path(file)
+  ['spec/fixtures/', file].join
+end
+
 def invalid_archive_fixture_filename
-  'spec/fixtures/invalid.zip'
+  fixture_path('invalid.zip')
 end
 
 def archive_fixture_filename
-  'spec/fixtures/test.zip'
+  fixture_path('test.zip')
 end
 
 def not_an_archive_fixture_filename
-  'spec/fixtures/test'
+  fixture_path('test')
+end
+
+def empty_archive_fixture_filename
+  fixture_path('empty.zip')
 end
 
 def archive_members

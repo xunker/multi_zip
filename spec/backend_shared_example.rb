@@ -151,7 +151,10 @@ shared_examples 'zip backend' do |backend_name|
       end
 
       context 'contains no members, is empty archive' do
-        it 'returns empty array'
+        let(:filename) { empty_archive_fixture_filename }
+        it 'returns empty array' do
+          expect(subject.list_members).to eq( [ ] )
+        end
       end
 
       it_behaves_like 'archive not found, raises ArchiveNotFoundError', :list_members
