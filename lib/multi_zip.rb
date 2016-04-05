@@ -53,7 +53,7 @@ class MultiZip
       extend BACKENDS[@backend][:constant].call
       return @backend
     else
-      raise NoSupportedBackendError, "Not a supported backend. Supported backends are #{BACKENDS.map(&:first).map(&:to_s).sort.join(', ')}"
+      raise InvalidBackendError.new(backend_name)
     end
   end
 
@@ -187,7 +187,7 @@ private
         return name
       end
     end
-    raise NoSupportedBackendError, "No supported backend found: #{BACKEND_PREFERENCE.join(', ')}"
+    raise NoSupportedBackendError
   end
 end
 
