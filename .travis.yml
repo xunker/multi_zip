@@ -16,3 +16,4 @@ matrix:
     - rvm:
       - ruby-head
       - rbx-2
+sudo: false
