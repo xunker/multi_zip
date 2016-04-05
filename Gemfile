@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gemspec
 
 # can't use pry on old rubies or on rubinius
-if (RUBY_VERSION.to_f >= 2.0 && RUBY_VERSION.to_f < 2.4) && RUBY_ENGINE == 'ruby'
+if RUBY_VERSION.to_f >= 2.0 && RUBY_ENGINE == 'ruby'
   gem 'byebug', :require => false
   gem 'guard-rspec', :require => false
 end
