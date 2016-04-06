@@ -12,8 +12,8 @@ It currently supports `.zip` archives only. See TODO for info on others.
 MultiZip provides a very small and focused set of functions:
 
  * Create a new zip archive or open existing one.
- * Add files to a archive from using content from a variable.
- * Read files from a archive in to a variable.
+ * Add files to an archive from a file a variable.
+ * Read files from an archive in to a variable.
  * Extract files from an archive to a local file.
  * List files contained in an archive.
  * Delete files from an archive.
@@ -43,7 +43,8 @@ Do the standard dance: Either add `gem 'multi_zip'` to your Gemfile or run
 `gem install multi_zip`.
 
 __IMPORTANT NEXT STEP:__ You will also need a zip backend gem installed and
-required. See `Supported Backends` for of which ones can be used.
+required. See [Supported Backend Gems](#supported-backend-gems) for a list of
+which ones can be used.
 
 ## Getting started
 
