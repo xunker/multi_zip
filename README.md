@@ -112,6 +112,18 @@ zip.list_members
 # ]
 ```
 
+#### Check if a file exists in an archive
+
+Returns `true` if the file exists in the archive, otherwise `false`
+
+```ruby
+zip.member_exists?('/path/inside/archive/to/file.txt')
+# => true
+
+zip.member_exists?('/doesnt_exist')
+# => false
+```
+
 #### Read file from zip archive
 
 ```ruby
