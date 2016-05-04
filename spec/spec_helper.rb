@@ -121,7 +121,7 @@ def test_with_cli?
   if ENV['ONLY']
     ENV['ONLY'] = 'cli'
   else
-    true
+    MultiZip::Backend::Cli.strategy_available?
   end
 end
 
