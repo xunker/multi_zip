@@ -5,12 +5,10 @@
   * #add_member: add file to archive from filesystem (new method).
   * Document exceptions raised, what they mean and how to use them.
   * Add inline docs for methods.
-  * support *nix zip(1L)/unzip(1L) without needing backend gem (with warning).
 
 #### Other things that need to be done, in no particular order:
 
   * Add support for more backends.
-  * Support for backend gems to process other formats (gzip, bzip2, 7zip, tar, etc).
   * Keep the backend archive open between method calls.
   * Add soak tests for memory usage once archived are kept open.
   * Ensure #close is executed when MultiZip instance goes out of scope.
@@ -39,8 +37,9 @@
 #### Things that I'd **like** to do, but won't.
 
 These are thinks that would be really nice to have but that are probably not
-realistic because they cannot be abstracted across all backend gems:
+realistic because they cannot be abstracted across all backend gems and systems:
 
+  * Support for backend gems to process other formats (gzip, bzip2, 7zip, tar, etc).
   * Ability to set location and compression format and level of archive.
   * Ability to set compression format and level of individual members (for Epub compatibility).
   * Ability to set archive location of individual members (for Epub compatibility).

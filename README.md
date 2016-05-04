@@ -54,8 +54,10 @@ which ones can be used.
   * archive/zip
   * zipruby
 
-If no usable backends are loaded a `MultiZip::NoSupportedBackendError` will be
-raised for any operation.
+If no usable gems are found, it will then look for Info `zip` and `unzip`
+programs in your path and will try to use those instead of a gem. If no
+compatible gems or programs can be found, a `MultiZip::NoSupportedBackendError`
+exception will be raised for any operation.
 
 If you have multiple gems available and want to choose your backend, you can
 do that in the initializer:
@@ -186,8 +188,7 @@ end
 
 Planned for the future:
 
-  * [archive](https://rubygems.org/gems/archive)
-  * [unix_utils](https://rubygems.org/gems/unix_utils)
+  * [archive gem](https://rubygems.org/gems/archive)
   * Other archive formats like gzip, bzip2, 7zip, tar, etc.
   * Jruby-specific gems
   * Others (please suggest them in a [new issue](https://github.com/xunker/multi_zip/issues/new))
