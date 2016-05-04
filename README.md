@@ -31,10 +31,11 @@ Rubies supported (see [CI status](https://travis-ci.org/xunker/multi_zip) for mo
 
 For information about which backend gems work in which ruby, see [Supported Backend Gems](#supported-backend-gems).
 
-This work is inspired by [multi_json](https://github.com/intridea/multi_json)
-and [multi_xml](https://github.com/sferik/multi_xml). This gem is dedicated to the Rubyists of
-[Asukusa.rb](https://asakusarb.doorkeeper.jp/) and
-[John Mettraux](https://twitter.com/jmettraux) of Hiroshima.　おもてなしのあなたはありがとう！
+This gem was inspired by [multi_json](https://github.com/intridea/multi_json)
+and [multi_xml](https://github.com/sferik/multi_xml), and is dedicated to the
+Rubyists of [Asukusa.rb](https://asakusarb.doorkeeper.jp/) and
+[John Mettraux](https://twitter.com/jmettraux) of Hiroshima.
+おもてなしのあなたはありがとう！
 
 ## Installation
 
