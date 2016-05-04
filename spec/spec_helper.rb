@@ -141,6 +141,11 @@ if excluded_backends.length > 0
   warn "*** Backends that will not be tested: #{excluded_backends.map(&:to_s).join(', ')} ***"
 end
 
+puts "*** MultiZip::Backend::Cli.strategy_available?: #{MultiZip::Backend::Cli.strategy_available?.inspect}"
+if MultiZip::Backend::Cli.strategy_available?
+  puts "*** MultiZip::Backend::Cli.strategy: #{MultiZip::Backend::Cli.strategy.inspect}"
+end
+
 BACKEND_CONSTANTS = Hash.new([])
 BACKEND_CLASSES = Hash.new([])
 
