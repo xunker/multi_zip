@@ -40,7 +40,8 @@ module MultiZip::Backend::Cli
       extend strategy.extend_class.call
       warn([
         "MultiZip is using the \"#{strategy.human_name}\" command-line program.",
-        "This is very inefficient and should not be used in production environments."
+        'This feature is considered PRE-ALPHA, unstable and inefficient and',
+        'should not be used in production environments.'
       ].join("\n"))
     else
       raise MultiZip::NoSupportedBackendError, "MultiZip::Backend::Cli could find no suitable zipping/unzipping programs in path."
