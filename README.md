@@ -12,8 +12,8 @@ It currently supports `.zip` archives only. See TODO for info on others.
 MultiZip provides a very small and focused set of functions:
 
  * Create a new zip archive or open existing one.
- * Add files to a archive from using content from a variable.
- * Read files from a archive in to a variable.
+ * Add files to an archive from a file a variable.
+ * Read files from an archive in to a variable.
  * Extract files from an archive to a local file.
  * List files contained in an archive.
  * Delete files from an archive.
@@ -43,7 +43,8 @@ Do the standard dance: Either add `gem 'multi_zip'` to your Gemfile or run
 `gem install multi_zip`.
 
 __IMPORTANT NEXT STEP:__ You will also need a zip backend gem installed and
-required. See `Supported Backends` for of which ones can be used.
+required. See [Supported Backend Gems](#supported-backend-gems) for a list of
+which ones can be used.
 
 ## Getting started
 
@@ -81,13 +82,13 @@ You can also check which of these supported backends is currently available:
 
 ```ruby
 > MultiZip.available_backends
- => [] 
+ => []
 > require 'archive/zip'
- => true 
+ => true
 > MultiZip.available_backends
- => [:archive_zip] 
+ => [:archive_zip]
 > require 'zip'
- => true 
+ => true
 > MultiZip.available_backends
  => [:rubyzip, :archive_zip]
 ```
@@ -162,7 +163,7 @@ file = zip.remove_members([
 # => true
 ```
 
-#### Creating a new instance and passing a block 
+#### Creating a new instance and passing a block
 
 `.new` can accept a block:
 
@@ -212,7 +213,7 @@ This behaviour is likely to change in future versions; see the below section
 that talks about the `#close` method for more information.
 
 #### `#close` method is currently a non-op
- 
+
 You'll notice that there is a `#close` method, but you may not know that it
 doesn't yet do anything since the underlying archive is not kept open between
 method calls.
@@ -220,69 +221,16 @@ method calls.
 However, you should still use `#close` where appropriate since this
 behaviour is likely to change in the future.
 
-#### Support for other Rubies
-
-Supporting MRI, Jruby and Rubinius covers 95% of the production-ruby market.
-However, In the future I plan on **trying** to support:
-
-  * maglev
-  * ironruby
-  * macruby
-
-The current travis-ci configuration only tests on Linux. Adding macruby
-support also means testing on OS X. I would like to one-day test with MRI, Ironruby and Jruby on Windows.
+#### Backend support on platforms
 
 MultiZip is written in pure ruby and so it should be able to run on any
 runtime that is compatible with MRI 1.8.7; however, the backend gems it uses
 may or may not work on every platform -- which is one of the reasons this
-gem exists in the first place! One day I would like to support backend gems
-that are specific to Jruby/Java and Windows.
-  
+gem exists in the first place!
+
 ## TODO
 
-Most important things, in order of importance:
-
-  * #add_member: add file to archive from filesystem (new method).
-  * Document exceptions raised, what they mean and how to use them.
-  * Add inline docs for methods.
-  * support *nix zip(1L)/unzip(1L) without needing backend gem (with warning).
-
-Other things that need to be done, in no particular order:
-
-  * Add support for more backends.
-  * Support for backend gems to process other formats (gzip, bzip2, 7zip, tar, etc).
-  * Keep the backend archive open between method calls.
-  * Add soak tests for memory usage once archived are kept open.
-  * Ensure #close is executed when MultiZip instance goes out of scope.
-  * Option to overwrite and existing archive instead of adding to it.
-  * #extract_member: extract file to path using original member name.
-  * #write_member: support for reading from IO streams.
-  * test with different majour versions of current supported backends.
-  * Standardize Exception classes and when to raise them.
-  * #read_*, #extract_* and #write_* methods should accept a block.
-  * #extract_members: extract multiple files with one command (new method).
-  * #write_member: add entire directory (recursively or not) to archive.
-  * #write_members: add multiple files by wildcard (new method).
-  * #add_members: add multiple files to archive from filesystem (new method).
-  * #remove_members: remove multiple member files from the archive (new_method).
-  * #read_members: read multiple files wildcard.
-  * #read_members: read multiple files via prefix as #list_members does.
-  * #extract_members: extract multiple files via prefix as #list_members does (new method).
-  * #extract_members: extract multiple files wildcard (new method).
-  * #member_info: return information (name, size, etc) about member (new method).
-  * #read_member_stream: return member as IO Stream to keeping large amounts of data in memory (new method).
-  * Write guide to show others how they can add their own backends gems.
-  * #member_type: return the type of the member (new method).
-  * #member_exists?: accept an argument to specify the file type (file, dir, symlink, etc).
-  * Soak-test each backend to find memory leaks.
-
-Things that I'd **like** to do, but that are probably not realistic because
-they cannot be sufficiently abstracted across all backend gems:
-
-  * Ability to set location and compression format and level of archive.
-  * Ability to set compression format and level of individual members (for Epub compatibility).
-  * Ability to set archive location of individual members (for Epub compatibility).
-  * Support creating, reading from and writing to password-protected or encrypted archives.
+See [TODO.md](TODO.md).
 
 ## Contributing
 

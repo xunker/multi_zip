@@ -1,7 +1,29 @@
 class MultiZip
-  class BaseError < RuntimeError; end
-  
-  class NoSupportedBackendError < BaseError; end
+  class BaseError < RuntimeError;
+    def to_s
+      if respond_to?(:message)
+        message
+      else
+        super
+      end
+    end
+  end
+
+  class NoSupportedBackendError < BaseError;
+    def message
+      "No supported backend found. Supported backends are #{MultiZip::BACKENDS.map(&:first).map(&:to_s).sort.join(', ')}"
+    end
+  end
+
+  class InvalidBackendError < BaseError;
+    attr_reader :requested_backend
+    def initialize(requested_backend)
+      @requested_backend = requested_backend
+    end
+    def message
+      "The requested backend \"#{@requested_backend}\" was not found. Supported backends are #{MultiZip::BACKENDS.map(&:first).map(&:to_s).sort.join(', ')}"
+    end
+  end
 
   class ArchiveError < BaseError
     attr_reader :archive_filename, :original_exception
@@ -28,10 +50,11 @@ class MultiZip
     def initialize(member_path)
       @member_path = member_path
     end
+  end
+
+  class MemberNotFoundError < MemberError
     def message
       "Member \"#{@member_path}\" not found."
     end
   end
-
-  class MemberNotFoundError < MemberError; end
 end

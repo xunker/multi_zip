@@ -2,8 +2,7 @@ require 'multi_zip'
 
 # can't use pry on old rubies or on rubinius
 if RUBY_VERSION.to_f >= 2.0 && RUBY_ENGINE == 'ruby'
-  require 'pry'
-  require 'pry-byebug'
+  require 'byebug'
 end
 
 RSpec.configure do |config|
@@ -29,12 +28,24 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 end
 
+def fixture_path(file)
+  ['spec/fixtures/', file].join
+end
+
 def invalid_archive_fixture_filename
-  'spec/fixtures/invalid.zip'
+  fixture_path('invalid.zip')
 end
 
 def archive_fixture_filename
-  'spec/fixtures/test.zip'
+  fixture_path('test.zip')
+end
+
+def not_an_archive_fixture_filename
+  fixture_path('test')
+end
+
+def empty_archive_fixture_filename
+  fixture_path('empty.zip')
 end
 
 def archive_members
@@ -72,7 +83,7 @@ def test_with_rubyzip?
   end
   false
 rescue Gem::LoadError
-  false  
+  false
 end
 
 def test_with_zipruby?
