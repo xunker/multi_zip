@@ -4,6 +4,33 @@ class MultiZip
   attr_reader :filename
 
   BACKEND_PREFERENCE = [ :rubyzip, :archive_zip, :zipruby, :cli ]
+  # XXX DELETE THIS COMMENT BLOCK BELOW
+  # BACKENDS = {
+  #   :rubyzip => {
+  #     :fingerprints => [
+  #       [nil, lambda { false }]
+  #     ],
+  #     :constant => lambda { MultiZip::Backend::Rubyzip }
+  #   },
+  #   :archive_zip => {
+  #     :fingerprints => [
+  #       [nil, lambda { false }]
+  #     ],
+  #     :constant => lambda { MultiZip::Backend::ArchiveZip }
+  #   },
+  #   :zipruby => {
+  #     :fingerprints => [
+  #       [nil, lambda { false }]
+  #     ],
+  #     :constant => lambda { MultiZip::Backend::Zipruby }
+  #   },
+  #   :cli => {
+  #     :fingerprints => [
+  #       [nil, lambda { false }]
+  #     ],
+  #     :constant => lambda { MultiZip::Backend::Cli.strategy.extend_class.call }
+  #   }
+  # }
   BACKENDS = {
     :rubyzip => {
       :fingerprints => [
@@ -39,7 +66,15 @@ class MultiZip
     self.backend = if b_end = options.delete(:backend)
       b_end
     else
-      default_backend
+      begin
+        default_backend
+      rescue NoSupportedBackendError => e
+        if !!options[:allow_no_backends] # TODO: Fix this test mode hack
+          nil
+        else
+          raise e
+        end
+      end
     end
 
     if block_given?
@@ -52,7 +87,7 @@ class MultiZip
   end
 
   def backend=(backend_name)
-    return if backend_name.nil?
+    return @backend if backend_name.nil?
     if BACKENDS.keys.include?(backend_name.to_sym)
       @backend = backend_name.to_sym
       require "multi_zip/backend/#{@backend}"

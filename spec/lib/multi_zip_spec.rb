@@ -2,7 +2,8 @@ require 'spec_helper'
 
 RSpec.describe MultiZip do
   let(:filename) { archive_fixture_filename }
-  let(:subject) { MultiZip.new(filename) }
+  let(:subject) { MultiZip.new(filename, instance_options) }
+  let(:instance_options) { {} }
 
   describe '.new' do
     it 'accepts a block'
@@ -24,6 +25,7 @@ RSpec.describe MultiZip do
     end
 
     context 'unknown backend' do
+      let(:instance_options) { { allow_no_backends: true } }
       it 'raises exception' do
         expect(
           lambda { subject.backend = 'unsupported' }
