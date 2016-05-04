@@ -25,7 +25,7 @@ RSpec.describe MultiZip do
     end
 
     context 'unknown backend' do
-      let(:instance_options) { { allow_no_backends: true } }
+      let(:instance_options) { { :allow_no_backends => true } }
       it 'raises exception' do
         expect(
           lambda { subject.backend = 'unsupported' }
