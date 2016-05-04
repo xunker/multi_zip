@@ -152,7 +152,7 @@ module MultiZip::Backend::Cli
 
         if response.first
           member_list = response.first.split("\n").sort
-          member_list.select!{|m| m =~ /^#{prefix}/} if prefix
+          member_list = member_list.select{|m| m =~ /^#{prefix}/} if prefix
           return member_list
         else # error, response.last should contain error message
           raise_info_zip_error!(response.last)
