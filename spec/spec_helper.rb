@@ -76,28 +76,61 @@ def archive_member_directories
 end
 
 def test_with_rubyzip?
-  # rubyzip requires ruby >= 1.9.2
-  if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("1.9.2")
-    gem 'rubyzip'
-    return true
+  test = if ENV['ONLY']
+    ENV['ONLY'] == 'rubyzip'
+  else
+    true
   end
-  false
+
+  if test
+    # rubyzip requires ruby >= 1.9.2
+    if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("1.9.2")
+      gem 'rubyzip'
+      return true
+    end
+    return false
+  end
 rescue Gem::LoadError
   false
 end
 
 def test_with_zipruby?
-  gem 'zipruby'
-  true
+  test = if ENV['ONLY']
+    ENV['ONLY'] == 'zipruby'
+  else
+    true
+  end
+
+  if test
+    gem 'zipruby'
+    return true
+  end
 rescue Gem::LoadError
   false
+end
+
+def test_with_archive_zip?
+  if ENV['ONLY']
+    ENV['ONLY'] =~ /archive/
+  else
+    true
+  end
+end
+
+def test_with_cli?
+  if ENV['ONLY']
+    ENV['ONLY'] = 'cli'
+  else
+    true
+  end
 end
 
 def backends_to_test
   @backends_to_test ||= [
     (test_with_zipruby? ? :zipruby : nil),
     (test_with_rubyzip? ? :rubyzip : nil),
-    :archive_zip
+    (test_with_archive_zip? ? :archive_zip : nil),
+    (test_with_cli? ? :cli : nil),
   ].compact
 end
 
@@ -108,8 +141,8 @@ if excluded_backends.length > 0
   warn "*** Backends that will not be tested: #{excluded_backends.map(&:to_s).join(', ')} ***"
 end
 
-BACKEND_CONSTANTS = {}
-BACKEND_CLASSES = {}
+BACKEND_CONSTANTS = Hash.new([])
+BACKEND_CLASSES = Hash.new([])
 
 def set_backend_class(lib, klass)
   BACKEND_CONSTANTS[lib.to_sym] = klass.constants

@@ -36,6 +36,8 @@ class MultiZip
     end
   end
 
+  class UnknownError < ArchiveError; end
+
   class InvalidArchiveError < ArchiveError; end
   class ArchiveNotFoundError < ArchiveError
     def message

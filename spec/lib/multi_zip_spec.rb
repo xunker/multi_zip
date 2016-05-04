@@ -27,7 +27,7 @@ RSpec.describe MultiZip do
       it 'raises exception' do
         expect(
           lambda { subject.backend = 'unsupported' }
-        ).to raise_exception(MultiZip::NoSupportedBackendError)
+        ).to raise_exception(MultiZip::InvalidBackendError)
       end
     end
   end

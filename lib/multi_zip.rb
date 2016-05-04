@@ -3,7 +3,7 @@ class MultiZip
 
   attr_reader :filename
 
-  BACKEND_PREFERENCE = [ :rubyzip, :archive_zip, :zipruby ]
+  BACKEND_PREFERENCE = [ :rubyzip, :archive_zip, :zipruby, :cli ]
   BACKENDS = {
     :rubyzip => {
       :fingerprints => [
@@ -24,6 +24,12 @@ class MultiZip
         ['constant', lambda { defined?(Zip::Archive) }]
       ],
       :constant => lambda { MultiZip::Backend::Zipruby }
+    },
+    :cli => {
+      :fingerprints => [
+        [true, lambda { MultiZip::Backend::Cli.strategy_available? } ]
+      ],
+      :constant => lambda { MultiZip::Backend::Cli.strategy.extend_class.call }
     }
   }
 
@@ -191,5 +197,6 @@ private
   end
 end
 
+require "multi_zip/backend/cli"
 require "multi_zip/version"
 require "multi_zip/errors"
