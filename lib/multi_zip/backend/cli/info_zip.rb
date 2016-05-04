@@ -5,6 +5,9 @@ module MultiZip::Backend::Cli
 
     BUFFER_SIZE = 8192
 
+    # TODO: better way to find full path to programs?
+    WHICH_PROGRAM = 'which'
+
     ZIP_AND_UNZIP_ARE_SAME_PROGRAM = false
 
     ZIP_PROGRAM = 'zip'
@@ -47,10 +50,18 @@ module MultiZip::Backend::Cli
     end
 
     def self.zip_program_found?
+      zip_program_path = `#{WHICH_PROGRAM} #{ZIP_PROGRAM}`.strip
+      return false unless zip_program_path =~ /#{ZIP_PROGRAM}/
+      return false unless File.exists?(zip_program_path)
+
       spawn([ZIP_PROGRAM, ZIP_PROGRAM_SIGNATURE_SWITCH]).first =~ ZIP_PROGRAM_SIGNATURE
     end
 
     def self.unzip_program_found?
+      unzip_program_path = `#{WHICH_PROGRAM} #{UNZIP_PROGRAM}`.strip
+      return false unless unzip_program_path =~ /#{UNZIP_PROGRAM}/
+      return false unless File.exists?(unzip_program_path)
+
       spawn([UNZIP_PROGRAM, UNZIP_PROGRAM_SIGNATURE_SWITCH]).first =~ UNZIP_PROGRAM_SIGNATURE
     end
 

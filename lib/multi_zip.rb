@@ -4,33 +4,6 @@ class MultiZip
   attr_reader :filename
 
   BACKEND_PREFERENCE = [ :rubyzip, :archive_zip, :zipruby, :cli ]
-  # XXX DELETE THIS COMMENT BLOCK BELOW
-  # BACKENDS = {
-  #   :rubyzip => {
-  #     :fingerprints => [
-  #       [nil, lambda { false }]
-  #     ],
-  #     :constant => lambda { MultiZip::Backend::Rubyzip }
-  #   },
-  #   :archive_zip => {
-  #     :fingerprints => [
-  #       [nil, lambda { false }]
-  #     ],
-  #     :constant => lambda { MultiZip::Backend::ArchiveZip }
-  #   },
-  #   :zipruby => {
-  #     :fingerprints => [
-  #       [nil, lambda { false }]
-  #     ],
-  #     :constant => lambda { MultiZip::Backend::Zipruby }
-  #   },
-  #   :cli => {
-  #     :fingerprints => [
-  #       [nil, lambda { false }]
-  #     ],
-  #     :constant => lambda { MultiZip::Backend::Cli.strategy.extend_class.call }
-  #   }
-  # }
   BACKENDS = {
     :rubyzip => {
       :fingerprints => [
