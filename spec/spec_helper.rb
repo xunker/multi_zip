@@ -1,7 +1,7 @@
 require 'multi_zip'
 
 # can't use pry on old rubies or on rubinius
-if RUBY_VERSION.to_f >= 2.0 && RUBY_ENGINE == 'ruby'
+if RUBY_VERSION.to_f >= 2.2 && RUBY_ENGINE == 'ruby'
   require 'byebug'
 end
 
