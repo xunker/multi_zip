@@ -10,12 +10,17 @@ module MultiZip::Backend::Cli
     ZIP_PROGRAM = 'zip'
     ZIP_PROGRAM_SIGNATURE = /This is Zip [2-3].\d+\s.+, by Info-ZIP/
     ZIP_PROGRAM_SIGNATURE_SWITCH = '-v'
+    ZIP_PROGRAM_REMOVE_MEMBER_SWITCH = '-d'
 
     UNZIP_PROGRAM ='unzip'
     UNZIP_PROGRAM_SIGNATURE = /UnZip [5-6]\.\d+ of .+, by Info-ZIP/
     UNZIP_PROGRAM_SIGNATURE_SWITCH = '-v'
     UNZIP_PROGRAM_LIST_MEMBERS_SWITCHES = ['-Z', '-1']
     UNZIP_PROGRAM_READ_MEMBER_SWITCH = '-p'
+
+    # TODO: does this change between versions?
+    # TODO: does this change with system language?
+    UNZIP_PROGRAM_EMPTY_ZIPFILE_MESSAGE = 'Empty zipfile.'
 
     def self.require_name
       'info_zip'
@@ -30,7 +35,7 @@ module MultiZip::Backend::Cli
     end
 
     def self.available?
-      @available ||= programs_found?    
+      @available ||= programs_found?
     end
 
     def self.programs_found?
@@ -143,6 +148,8 @@ module MultiZip::Backend::Cli
           UNZIP_PROGRAM, UNZIP_PROGRAM_LIST_MEMBERS_SWITCHES, @filename
         ].flatten)
 
+        return [] if response.first.to_s =~ /^#{UNZIP_PROGRAM_EMPTY_ZIPFILE_MESSAGE}/
+
         if response.first
           member_list = response.first.split("\n").sort
           member_list.select!{|m| m =~ /^#{prefix}/} if prefix
@@ -160,7 +167,7 @@ module MultiZip::Backend::Cli
         ].flatten)
 
         return response.first if response.first
-          
+
         raise_info_zip_error!(response.last, :member_path => member_path)
       end
 
@@ -176,10 +183,23 @@ module MultiZip::Backend::Cli
           response = MultiZip::Backend::Cli::InfoZip.spawn([
             ZIP_PROGRAM, @filename, member_path
           ])
-          
+
           Dir.chdir(cwd)
         end
         true
+      end
+
+      def remove_member(member_path, options={})
+        archive_exists!
+        raise MultiZip::MemberNotFoundError.new(member_path) unless member_exists?(member_path)
+
+        response = MultiZip::Backend::Cli::InfoZip.spawn([
+          ZIP_PROGRAM, ZIP_PROGRAM_REMOVE_MEMBER_SWITCH, @filename, member_path
+        ].flatten)
+
+        return response.first if response.first
+
+        raise_info_zip_error!(response.last, :member_path => member_path)
       end
 
       def raise_info_zip_error!(message, options={})
@@ -197,7 +217,7 @@ module MultiZip::Backend::Cli
       end
     end
 
-    
+
     class ResponseError < MultiZip::InvalidArchiveError
       attr_reader :message
       def initialize(error_message)

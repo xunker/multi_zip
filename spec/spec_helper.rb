@@ -76,29 +76,53 @@ def archive_member_directories
 end
 
 def test_with_rubyzip?
-  # rubyzip requires ruby >= 1.9.2
-  if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("1.9.2")
-    gem 'rubyzip'
-    return true
+  test = if ENV['ONLY']
+    ENV['ONLY'] == 'rubyzip'
+  else
+    true
   end
-  false
+
+  if test
+    # rubyzip requires ruby >= 1.9.2
+    if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("1.9.2")
+      gem 'rubyzip'
+      return true
+    end
+    return false
+  end
 rescue Gem::LoadError
   false
 end
 
 def test_with_zipruby?
-  gem 'zipruby'
-  true
+  test = if ENV['ONLY']
+    ENV['ONLY'] == 'zipruby'
+  else
+    true
+  end
+
+  if test
+    gem 'zipruby'
+    return true
+  end
 rescue Gem::LoadError
   false
 end
 
 def test_with_archive_zip?
-  true
+  if ENV['ONLY']
+    ENV['ONLY'] =~ /archive/
+  else
+    true
+  end
 end
 
 def test_with_cli?
-  true
+  if ENV['ONLY']
+    ENV['ONLY'] = 'cli'
+  else
+    true
+  end
 end
 
 def backends_to_test
