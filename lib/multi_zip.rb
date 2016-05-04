@@ -1,6 +1,12 @@
 class MultiZip
   module Backend; end # populated later by #extend
+end
 
+require "multi_zip/backend/cli"
+require "multi_zip/version"
+require "multi_zip/errors"
+
+class MultiZip
   attr_reader :filename
 
   BACKEND_PREFERENCE = [ :rubyzip, :archive_zip, :zipruby, :cli ]
@@ -196,7 +202,3 @@ private
     raise NoSupportedBackendError
   end
 end
-
-require "multi_zip/backend/cli"
-require "multi_zip/version"
-require "multi_zip/errors"
