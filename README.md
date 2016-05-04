@@ -7,7 +7,7 @@ interface regardless of which is being used. This allows for code that is more
 portable and helps to avoid namespace collisions (zipruby vs. rubyzip for example)
 and other implementation restrictions (MRI vs. Jruby, Unix vs. Windows, etc,).
 
-It currently supports `.zip` archives only. See TODO for info on others.
+It currently supports `.zip` archives only.
 
 MultiZip provides a very small and focused set of functions:
 
@@ -17,8 +17,6 @@ MultiZip provides a very small and focused set of functions:
  * Extract files from an archive to a local file.
  * List files contained in an archive.
  * Delete files from an archive.
- * Get information for a file in an archive. (Pending TODO)
- * Add a local file to an archive. (Pending TODO).
 
 It is meant for most common zip/unzip tasks. For anything more
 complicated than these basics, you should use a specific (un)zipping library
@@ -26,7 +24,7 @@ instead.
 
 Rubies supported (see [CI status](https://travis-ci.org/xunker/multi_zip) for more detail):
   * MRI 2.x.x, 1.9.3, 1.8.7 and REE.
-  * Jruby
+  * Jruby (1.8 and 1.9 mode)
   * Rubinius 2
 
 For information about which backend gems work in which ruby, see [Supported Backend Gems](#supported-backend-gems).
@@ -50,14 +48,14 @@ which ones can be used.
 
 `multi_zip` will try to use the available gem backends in the following order:
 
-  * rubyzip
-  * archive/zip
-  * zipruby
+  * [rubyzip](https://rubygems.org/gems/rubyzip)
+  * [archive-zip](https://rubygems.org/gems/archive-zip)
+  * [zipruby](https://rubygems.org/gems/zipruby)
 
-If no usable gems are found, it will then look for Info `zip` and `unzip`
-programs in your path and will try to use those instead of a gem. If no
-compatible gems or programs can be found, a `MultiZip::NoSupportedBackendError`
-exception will be raised for any operation.
+If no usable gems are found, it will then look for a compatible `zip`/ `unzip`
+program in your path and will try to use that instead of a gem. If no
+compatible gems or program can be found, a `MultiZip::NoSupportedBackendError`
+exception will be raised.
 
 If you have multiple gems available and want to choose your backend, you can
 do that in the initializer:
