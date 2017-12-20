@@ -1,3 +1,7 @@
+### 0.1.6.1 - Dec 20, 2017
+
+Maintenance release that fixes compatibility with 1.8.7, and rubyzip-1.2.1.
+
 ### 0.1.6 - Dec 20, 2017
 
 Added '#member_info` method for retrieving file size and information.

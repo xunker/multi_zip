@@ -103,10 +103,10 @@ module MultiZip::Backend::ArchiveZip
       member = zip.find{|m| m.zip_path == member_path}
       if member
         return {
-          path: member.zip_path,
-          size: member.expected_data_descriptor.uncompressed_size.to_i,
-          type: member.ftype,
-          original: member
+          :path => member.zip_path,
+          :size => member.expected_data_descriptor.uncompressed_size.to_i,
+          :type => member.ftype,
+          :original => member
         }
       else
         zip.close

@@ -69,10 +69,10 @@ module MultiZip::Backend::Zipruby
       member_stats = zip.get_stat(member_location)
 
       {
-        path: member_stats.name,
-        size: member_stats.size.to_i,
-        type: member_stats.directory? ? :directory : :file,
-        original: member_stats
+        :path => member_stats.name,
+        :size => member_stats.size.to_i,
+        :type => member_stats.directory? ? :directory : :file,
+        :original => member_stats
       }
     end
   end

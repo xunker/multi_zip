@@ -258,10 +258,10 @@ module MultiZip::Backend::Cli
           end
 
         {
-          path: fields.last,
-          size: size.to_i,
-          type: type,
-          original: line
+          :path => fields.last,
+          :size => size.to_i,
+          :type => type,
+          :original => line
         }
 
       end

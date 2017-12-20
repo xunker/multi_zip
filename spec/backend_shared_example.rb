@@ -207,9 +207,9 @@ shared_examples 'zip backend' do |backend_name|
             info = subject.member_info(member_file)
             expect(info).to include(
               {
-                path: member_file,
-                size: archive_member_size(member_file),
-                type: :file
+                :path => member_file,
+                :size => archive_member_size(member_file),
+                :type => :file
               }
             )
 
@@ -228,9 +228,9 @@ shared_examples 'zip backend' do |backend_name|
             subject.member_info(archive_member_directories.first)
           ).to include(
             {
-              path: archive_member_directories.first,
-              size: archive_member_size(archive_member_directories.first).to_i,
-              type: :directory
+              :path => archive_member_directories.first,
+              :size => archive_member_size(archive_member_directories.first).to_i,
+              :type => :directory
             }
           )
         end
