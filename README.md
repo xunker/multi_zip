@@ -124,6 +124,26 @@ zip.member_exists?('/doesnt_exist')
 # => false
 ```
 
+#### Get member information (file size, etc)
+
+Returns a hash if the file exists in the archive, otherwise will raise exception.
+
+```ruby
+zip.member_info('/path/inside/archive/to/file.txt')
+# => { :path => '/path/inside/archive/to/file.txt', :size => 14323, type: :file }
+```
+
+At a minimum, the returned hash will contain:
+  :path  the full path of the member file (should equal `member_path` arg)
+  :size  the UNCOMPRESSED file size, in bytes
+
+Optionally, it MAY contain these keys:
+  :type             Filesystem type of the member (:directory, :file, :symlink, etc)
+  :created_at       creation timestamp of the file as an instance of Time
+  :compressed_size  size of the COMPRESSED file in bytes
+  :original         The original member info object as returned from the backend
+                    gem. Ex: using rubyzip, it would be an instace of Zip::Entry.
+
 #### Read file from zip archive
 
 ```ruby

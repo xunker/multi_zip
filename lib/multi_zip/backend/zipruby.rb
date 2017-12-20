@@ -58,6 +58,25 @@ module MultiZip::Backend::Zipruby
     true
   end
 
+  def member_info(member_path, options = {})
+    read_operation do |zip|
+      member_location = zip.locate_name(member_path)
+      if member_location == -1
+        zip.close
+        member_not_found!(member_path)
+      end
+
+      member_stats = zip.get_stat(member_location)
+
+      {
+        path: member_stats.name,
+        size: member_stats.size.to_i,
+        type: member_stats.directory? ? :directory : :file,
+        original: member_stats
+      }
+    end
+  end
+
 private
 
   # NOTE: Zip::Archive#locate_name return values

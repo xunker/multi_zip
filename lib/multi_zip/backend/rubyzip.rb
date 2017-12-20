@@ -55,6 +55,21 @@ module MultiZip::Backend::Rubyzip
     end
   end
 
+  def member_info(member_path, options = {})
+    read_operation do |zip_file|
+      if zip_entry = zip_file.detect{|ze| ze.name == member_path}
+        {
+          path: zip_entry.name,
+          size: zip_entry.size.to_i,
+          type: zip_entry.ftype,
+          original: zip_entry
+        }
+      else
+        member_not_found!(member_path)
+      end
+    end
+  end
+
 private
 
   def read_operation(&blk)

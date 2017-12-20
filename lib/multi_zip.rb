@@ -138,6 +138,23 @@ class MultiZip
     list_members(nil, options).include?(member_path)
   end
 
+  # Returns a hash of information about the member file. At a minimum, the hash
+  # MUST contain these keys:
+  #  :path  the full path of the member file (should equal `member_path` arg)
+  #  :size  the UNCOMPRESSED file size, in bytes
+  #
+  # Optionally, it MAY contain these keys:
+  #  :created_at  creation timestamp of the file as an instance of Time
+  #  :compressed_size size of the COMPRESSED file
+  #  :type        Filesystem type of the member (:directory, :file, :symlink, etc)
+  #  :original    The original member info object as returned from the backend
+  #               gem. Ex: using rubyzip, it would be an instace of Zip::Entry.
+  #
+  # This method MUST be overridden by a backend module.
+  def member_info(member_path, options={})
+    raise NotImplementedError
+  end
+
   # Write string contents to a zip member file
   def write_member(member_path, member_content, options={})
     raise NotImplementedError

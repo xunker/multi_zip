@@ -200,6 +200,55 @@ shared_examples 'zip backend' do |backend_name|
       end
     end
 
+    describe '#member_info' do
+      context 'member found' do
+        archive_member_files.each do |member_file|
+          it "returns hash of member information" do
+            info = subject.member_info(member_file)
+            expect(info).to include(
+              {
+                path: member_file,
+                size: archive_member_size(member_file),
+                type: :file
+              }
+            )
+
+            expect(info[:original]).to_not be_nil
+          end
+        end
+      end
+
+      context 'member not found' do
+        it_behaves_like 'raises MemberNotFoundError', :member_info, 'doesnt_exist'
+      end
+
+      context 'member is a directory' do
+        it "returns hash of member information" do
+          expect(
+            subject.member_info(archive_member_directories.first)
+          ).to include(
+            {
+              path: archive_member_directories.first,
+              size: archive_member_size(archive_member_directories.first).to_i,
+              type: :directory
+            }
+          )
+        end
+      end
+
+      it_behaves_like 'archive not found, raises ArchiveNotFoundError', :member_info, archive_member_files.first
+
+      it_behaves_like 'archive is not a file, raises ArchiveNotFoundError', :member_info, archive_member_files.first
+
+      context 'archive cannot be accessed due to permissions' do
+        it 'raises ArchiveNotAccessibleError'
+      end
+
+      context 'invalid or unreadable archive' do
+        it_behaves_like 'raises InvalidArchiveError', :member_info, archive_member_files.first
+      end
+    end
+
     describe '#write_member' do
       after { FileUtils.rm(filename) if File.exists?(filename) }
 

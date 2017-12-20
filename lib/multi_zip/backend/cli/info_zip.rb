@@ -20,10 +20,13 @@ module MultiZip::Backend::Cli
     UNZIP_PROGRAM_SIGNATURE_SWITCH = '-v'
     UNZIP_PROGRAM_LIST_MEMBERS_SWITCHES = ['-Z', '-1']
     UNZIP_PROGRAM_READ_MEMBER_SWITCH = '-p'
+    UNZIP_PROGRAM_MEMBER_INFO_SWITCHES = ['-Z']
 
     # TODO: does this change between versions?
     # TODO: does this change with system language?
     UNZIP_PROGRAM_EMPTY_ZIPFILE_MESSAGE = 'Empty zipfile.'
+    UNZIP_PROGRAM_MEMBER_NOT_FOUND_MESSAGE = 'caution: filename not matched:'
+    UNZIP_PROGRAM_INVALID_FILE_MESSAGE = 'End-of-central-directory signature not found'
 
     def self.require_name
       'info_zip'
@@ -213,10 +216,60 @@ module MultiZip::Backend::Cli
         raise_info_zip_error!(response.last, :member_path => member_path)
       end
 
+      def member_info(member_path, options={})
+        archive_exists!
+
+        response = MultiZip::Backend::Cli::InfoZip.spawn([
+          UNZIP_PROGRAM, UNZIP_PROGRAM_MEMBER_INFO_SWITCHES, @filename, member_path
+        ].flatten).compact
+
+        if response.join =~ /#{UNZIP_PROGRAM_INVALID_FILE_MESSAGE}/
+          raise_info_zip_error!(response.join)
+        end
+
+        # example line:
+        # -rwx------  2.1 unx      558 bX defN 15-Jun-22 17:53 ROBO3DR1PLUSV1/BlinkM.cpp
+
+        line = response.detect{|r| r.strip.match(/#{member_path}$/)}
+
+        raise MultiZip::MemberNotFoundError.new(member_path) if line.nil? || line =~ /#{UNZIP_PROGRAM_MEMBER_NOT_FOUND_MESSAGE}/i
+
+        fields = line.split(/\s+/)
+
+        path = fields.last
+        unless path == member_path
+          raise MultiZip::Backend::Cli::InfoZip::ResponseError, "Unexpected file name format or position: #{line.inspect}"
+        end
+
+        size = fields[3]
+        unless size =~ /\d+/
+          raise MultiZip::Backend::Cli::InfoZip::ResponseError, "Unexpected file size format or position: #{line.inspect}"
+        end
+
+        type = case fields[0].slice(0,1)
+          when 'd'
+            :directory
+          when 'l'
+            :symlink
+          when '-'
+            :file
+          else
+            raise MultiZip::Backend::Cli::InfoZip::ResponseError, "Unexpected file type field format or position: #{line.inspect}"
+          end
+
+        {
+          path: fields.last,
+          size: size.to_i,
+          type: type,
+          original: line
+        }
+
+      end
+
       def raise_info_zip_error!(message, options={})
         infozip_error = MultiZip::Backend::Cli::InfoZip::ResponseError.new(message)
         case message
-        when /End-of-central-directory signature not found/
+        when /#{UNZIP_PROGRAM_INVALID_FILE_MESSAGE}/
           raise MultiZip::InvalidArchiveError.new(@filename, infozip_error)
         when /cannot find or open/
           raise MultiZip::ArchiveNotFoundError.new(@filename, infozip_error)

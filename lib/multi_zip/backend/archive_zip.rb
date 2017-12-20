@@ -29,7 +29,7 @@ module MultiZip::Backend::ArchiveZip
     tempfile = Tempfile.new('multizip_member')
     tempfile.write(member_contents)
     tempfile.close
-    
+
     zip = Archive::Zip.new(@filename, :w)
     new_entry = Archive::Zip::Entry.from_file(tempfile.path, :zip_path => member_path)
     zip.add_entry(new_entry)
@@ -47,7 +47,7 @@ module MultiZip::Backend::ArchiveZip
     end
   end
 
-  def extract_member(member_path, destination_path, options = {}) 
+  def extract_member(member_path, destination_path, options = {})
     archive_operation do |zip|
       member = zip.find{|m| m.zip_path == member_path}
       if member && member.file?
@@ -73,18 +73,18 @@ module MultiZip::Backend::ArchiveZip
     member_paths.each do |member_path|
       exists!(member_path)
     end
-    
+
     # archive-zip doesn't have the #remove_entry method any more, so we do
     # this in a really slow way: we dump the entire dir to the filesystem,
     # delete `member_path` and zip the whole thing up again.
-    
+
     Dir.mktmpdir do |tmp_dir|
       Archive::Zip.extract(@filename, tmp_dir)
 
       member_paths.each do |member_path|
         FileUtils.rm("#{tmp_dir}/#{member_path}")
       end
-      
+
       # create a tempfile and immediately delete it, we just want the name.
       tempfile = Tempfile.new(['multizip_temp', '.zip'])
       tempfile_path = tempfile.path
@@ -96,6 +96,23 @@ module MultiZip::Backend::ArchiveZip
     end
 
     true
+  end
+
+  def member_info(member_path, options = {})
+    archive_operation do |zip|
+      member = zip.find{|m| m.zip_path == member_path}
+      if member
+        return {
+          path: member.zip_path,
+          size: member.expected_data_descriptor.uncompressed_size.to_i,
+          type: member.ftype,
+          original: member
+        }
+      else
+        zip.close
+        member_not_found!(member_path)
+      end
+    end
   end
 
 private
