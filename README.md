@@ -208,13 +208,30 @@ end
 ## Supported backend gems
 
   * [rubyzip](https://rubygems.org/gems/rubyzip)
-    - Works in MRI 1.9.3 and 2.x.x.
-    - Gem doesn't support MRI 1.8.7, Jruby or Rubinius.
+    - Works in MRI 2.x.x.
+    - Version 1.2.0 is the last that is compatible with MRI 1.9.3
+    - Doesn't support MRI 1.8.7, Jruby or Rubinius.
   * [archive-zip](https://rubygems.org/gems/archive-zip)
     - Works in all MRI, Jruby and Rubinius.
   * [zipruby](https://rubygems.org/gems/zipruby)
     - Works in all MRI.
     - Gem doesn't support Jruby or Rubinius.
+  * Command-line `zip` and `unzip` ("Info-ZIP" style)
+    - This is not a gem, it is an always-included fallback that will allow the
+      gem to work on any system that has Info-ZIP `zip` 3.00 and Info-ZIP
+      `unzip` 6.0 command-line programs available.
+
+    - Please note that this is currently *experimental* and should __not__ be
+      used in mission-critical situations.
+
+    - Platforms where this is available include:
+        - Mac OS X (installed by default)
+        - Most Linux'es
+          - Ubuntu (default), including most Debian-based distros
+          - RedHat (default), including AMI
+        - FreeBSD
+        - Windows
+        - See [the Info-ZIP site](http://www.info-zip.org/) for complete list
 
 Planned for the future:
 

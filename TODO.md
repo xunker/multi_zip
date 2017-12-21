@@ -4,19 +4,39 @@
 
   * #add_member: add file to archive from filesystem (new method).
   * Document exceptions raised, what they mean and how to use them.
-  * Add inline docs for methods.
+  * Add inline docs for methods, in PROPER format.
+  * Return zip members as objects, move all member-level methods there. Ex:
+    ```ruby
+      # A call like this:
+
+      file = zip.read_member('/path/inside/archive/to/file.txt')
+      # => "This is the content of the file from the archive."
+
+      # ..would change in to this:
+      member = zip.find('/path/inside/archive/to/file.txt')
+      file = member.read
+      # => "This is the content of the file from the archive."
+      size = member.size
+      # => 49
+      ```
+  * Travis-CI testing on more platforms and operating systems, with special
+    attention to command-line zip/unzip compatibility. Most important:
+    - Mac OS X
+    - Windows (installing zip/unzip may be tricky?)
+    - *BSD
 
 #### Other things that need to be done, in no particular order:
 
   * Add support for more backends.
-  * Keep the backend archive open between method calls.
+  * Option to keep the backend archive open between method calls.
+    - Necessitates automatically calling #close when instance leaves scope.
   * Add soak tests for memory usage once archived are kept open.
   * Ensure #close is executed when MultiZip instance goes out of scope.
   * Option to overwrite and existing archive instead of adding to it.
   * #extract_member: extract file to path using original member name.
   * #write_member: support for reading from IO streams.
   * test with different majour versions of current supported backends.
-  * Standardize Exception classes and when to raise them.
+  * Standardize Exception classes and when to raise them, and document it.
   * #read_*, #extract_* and #write_* methods should accept a block.
   * #extract_members: extract multiple files with one command (new method).
   * #write_member: add entire directory (recursively or not) to archive.
@@ -45,4 +65,3 @@ realistic because they cannot be abstracted across all backend gems and systems:
   * Ability to set archive location of individual members (for Epub compatibility).
   * Support creating, reading from and writing to password-protected or encrypted archives.
   * Support MagLev, IronRuby and MacRuby.
-  * Support Windows.
