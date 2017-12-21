@@ -23,9 +23,9 @@ complicated than these basics, you should use a specific (un)zipping library
 instead.
 
 Rubies supported (see [CI status](https://travis-ci.org/xunker/multi_zip) for more detail):
-  * MRI 2.x.x, 1.9.3, 1.8.7 and REE.
-  * Jruby (1.8 and 1.9 mode)
-  * Rubinius 2
+  * MRI 2.x.x, 1.9.3, 1.8.7.
+  * Jruby
+  * Rubinius
 
 For information about which backend gems work in which ruby, see [Supported Backend Gems](#supported-backend-gems).
 
